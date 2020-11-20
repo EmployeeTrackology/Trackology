@@ -1,0 +1,35 @@
+
+[
+    {
+        "name":"Add Employee",
+        "desc":"Add employee detials",
+        "img":"images/addemp.png",
+        "path":"/add_employee"
+        },
+    
+    {
+    "name":"Attendance Summary",
+    "desc":"Check attendance of employee" ,
+    "img":"images/summary.png",
+    "path":"/admin"
+    },
+    {
+    "name":"Leave Applications",
+    "desc":"Approves/reject leaves",
+    "img": "images/apply.jpg",
+    "path":"/admin_leave_app"
+    },
+    {
+    "name":"Employees",
+    "desc":"View employees",
+    "img":"images/emp.jpg",
+    "path":"/view_employees"
+    },
+    {
+    "name":"Holidays",
+    "desc":"Manage holidays",
+    "img": "images/holiday.jpg",
+    "path":"/admin_holidays"
+    }
+    
+]

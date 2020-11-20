@@ -1,0 +1,32 @@
+[
+    {
+    "name":"Attendance Recorder",
+    "desc":"Mark in/out time",
+    "img":"images/map.png",
+    "path":"/record_attendance"
+    },
+    {
+    "name":"Attendance History",
+    "desc":"Check your previous attendance" ,
+    "img":"images/attend2.png",
+    "path":"/attendace_history"
+    },
+    {
+    "name":"Leave Status",
+    "desc":"Check pending stauts of leaves",
+    "img":"images/leave.png",
+    "path":"/leave_status"
+    },
+    {
+    "name":"Leave Application",
+    "desc":"Apply for a leave",
+    "img": "images/apply.jpg",
+    "path":"/leave_app_form"
+    },
+    {
+    "name":"Holidays",
+    "desc":"View public holidays",
+    "img": "images/holiday.jpg",
+    "path":"/emp_holidays"
+    }
+]

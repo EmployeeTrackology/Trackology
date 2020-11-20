@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "157998974275",
+    "firebase_url": "https://emptracker-77817.firebaseio.com",
+    "project_id": "emptracker-77817",
+    "storage_bucket": "emptracker-77817.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:157998974275:android:24460a6c322274d3e99bf6",
+        "android_client_info": {
+          "package_name": "com.example.emp_tracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "157998974275-dhuhgcur8uchhos7fovn18mduvnhvf8o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1EpFRjA_x25TuBAHqzgBIh1lAUiCuT64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "157998974275-dhuhgcur8uchhos7fovn18mduvnhvf8o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

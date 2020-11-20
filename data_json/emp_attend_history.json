@@ -1,0 +1,38 @@
+[
+    {
+        "type":"in",
+        "date":"22-07-20",
+        "place":"Kjsce,Vidhyavihar",
+        "time":"9:15 AM"
+    },
+    {
+        "type":"out",
+        "date":"22-07-20",
+        "place":"Kjsce,Vidhyavihar",
+        "time":"6:15 PM"
+    },
+    {
+        "type":"in",
+        "date":"21-07-20",
+        "place":"Kjsce,Vidhyavihar",
+        "time":"9:30 AM"
+    },
+    {
+        "type":"out",
+        "date":"21-07-20",
+        "place":"Kjsce,Vidhyavihar",
+        "time":"5:45 PM"
+    },
+    {
+        "type":"in",
+        "date":"19-07-20",
+        "place":"Kjsce,Vidhyavihar",
+        "time":"9:10 AM"
+    },
+    {
+        "type":"out",
+        "date":"19-07-20",
+        "place":"Kjsce,Vidhyavihar",
+        "time":"5:50 PM"
+    }
+]

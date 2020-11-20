@@ -1,0 +1,37 @@
+[
+    {
+      "name": "Hasti Shah",
+      "type":"Casual leaves",
+      "from":"25-09-20",
+      "to":"30-10-20",
+      "appliedOn":"9-9-20"
+    },
+    {
+      "name" : "Sakshi Shelar",
+      "type":"Medical leaves",
+      "from":"25-09-20",
+      "to":"30-10-20",
+      "appliedOn":"9-9-20"
+    },
+    {
+      "name": "Nishi Shah",
+      "type":"Annual leaves",
+      "from":"25-09-20",
+      "to":"30-10-20",
+      "appliedOn":"9-9-20"
+    },
+    {
+      "name": "Hiral Sheth",
+      "type":"Casual leaves",
+      "from":"25-09-20",
+      "to":"30-10-20",
+      "appliedOn":"9-9-20"
+    },
+    {
+      "name": "Sakshi Pandey",
+      "type":"Medical leaves",
+      "from":"25-09-20",
+      "to":"30-10-20",
+      "appliedOn":"9-9-20"
+    }
+  ]
