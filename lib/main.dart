@@ -12,30 +12,30 @@ import 'attend_history.dart';
 import 'leave_app_form.dart';
 import 'admin_holidays.dart';
 import 'view_holidays.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:provider/provider.dart';
-import 'authentication_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:provider/provider.dart';
+// import 'authentication_service.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
-Future<void> main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+void main()  {
+  // WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        Provider<AuthenticationService>(/**/
-          create: (_) => AuthenticationService(FirebaseAuth.instance),
-        ),
-        StreamProvider(
-          create: (context) => context.read<AuthenticationService>().authStateChanges,
-        )
-      ],
-      child: MaterialApp(
+    // return MultiProvider(
+    //   providers: [
+    //     Provider<AuthenticationService>(/**/
+    //       create: (_) => AuthenticationService(FirebaseAuth.instance),
+    //     ),
+    //     StreamProvider(
+    //       create: (context) => context.read<AuthenticationService>().authStateChanges,
+    //     )
+    //   ],
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
           scaffoldBackgroundColor: Color(0xffC7D3F4),
@@ -60,22 +60,11 @@ class MyApp extends StatelessWidget {
         '/admin_holidays': (context) => Holiday(),
         '/emp_holidays': (context) => ViewHoliday()
       },
-      home:AuthenticationWrapper(),
-    )
+      // home:AuthenticationWrapper(),
     );
   }
 }
-class AuthenticationWrapper extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final firebaseUser = context.watch<User>();
 
-    if (firebaseUser != null) {
-      return MyHomePage();
-    }
-    return LoginPage();
-  }
-}
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();

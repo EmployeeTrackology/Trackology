@@ -1,6 +1,6 @@
-import 'authentication_service.dart';
+// import 'authentication_service.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+// import 'package:provider/provider.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -29,9 +29,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             iconSize: 30,
             color: Colors.white,
             onPressed: () {
-              context.read<AuthenticationService>().signOut();
+              // context.read<AuthenticationService>().signOut();
               print("Quit");
-              // Navigator.pushNamed(context, "/");
+              Navigator.pushNamed(context, "/");
             },
         )
       ]);

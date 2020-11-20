@@ -8,12 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:157998974275:android:24460a6c322274d3e99bf6",
+        "mobilesdk_app_id": "1:157998974275:android:76a5a184ae45f906e99bf6",
         "android_client_info": {
           "package_name": "com.example.emp_tracker"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "157998974275-dqdkdlss5vdf51p87vfi7vcppvo62q2s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.emp_tracker",
+            "certificate_hash": "a3dc34cff6b9801d3d4b6e3fb6fa3abb6a39f656"
+          }
+        },
         {
           "client_id": "157998974275-dhuhgcur8uchhos7fovn18mduvnhvf8o.apps.googleusercontent.com",
           "client_type": 3

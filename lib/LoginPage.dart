@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'SignUpPage.dart';
 import 'appbar.dart';
 
-import 'authentication_service.dart';
-import 'package:provider/provider.dart';
+// import 'authentication_service.dart';
+// import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -145,11 +145,11 @@ class _LoginPageState extends State<LoginPage> {
                                   BorderRadius.all(Radius.circular(15))),
                           child: InkWell(
                             onTap: () {
-                               context.read<AuthenticationService>().signIn(
-                              email: emailController.text.trim(),
-                              password: passwordController.text.trim(),
-                            );
-                              // Navigator.pushNamed(context, "/admin");
+                            //    context.read<AuthenticationService>().signIn(
+                            //   email: emailController.text.trim(),
+                            //   password: passwordController.text.trim(),
+                            // );
+                              Navigator.pushNamed(context, "/admin");
                             },
                             child: Center(
                               child: Text(
