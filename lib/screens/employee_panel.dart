@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import "panel_appbar.dart";
+import "package:emp_tracker/screens/panel_appbar.dart";
 
 
 class FunctionRow extends StatelessWidget {

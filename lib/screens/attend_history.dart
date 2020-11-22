@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import "panel_appbar.dart";
+import "package:emp_tracker/screens/appbar.dart";
 import 'dart:async';
 
 class AttendRow extends StatelessWidget {
@@ -90,7 +90,7 @@ class _CheckState extends State<Check> {
     }
 
     return Scaffold(
-        appBar: new AppBarPanel("Attendance History"),
+        appBar: new MyAppBar("Attendance History"),
         body: ListView(children: [
           Row(
             children: [

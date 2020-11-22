@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
-import 'SignUpPage.dart';
-import 'appbar.dart';
-
-// import 'authentication_service.dart';
-// import 'package:provider/provider.dart';
+import 'package:emp_tracker/screens/authenticate/SignUpPage.dart';
+import 'package:emp_tracker/screens/appbar.dart';
+// import 'package:emp_tracker/services/auth.dart';
+import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
+// a3:dc:34:cf:f6:b9:80:1d:3d:4b:6e:3f:b6:fa:3a:bb:6a:39:f6:56
 
 class _LoginPageState extends State<LoginPage> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   bool hidePwd = true;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  bool isGoogleSignIn = false;
+  String errorMessage = '';
+  String successMessage = '';
+  final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
+  String _emailId;
+  String _password;
+  final _emailIdController = TextEditingController(text: '');
+  final _passwordController = TextEditingController(text: '');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,17 +44,33 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ),
           Expanded(
-            child: Container(
-              margin: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(40)),
-                color: Colors.white10.withOpacity(0.2),
-              ),
               child: Container(
-                padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+            margin: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(40)),
+              color: Colors.white10.withOpacity(0.2),
+            ),
+            child: Container(
+              padding: EdgeInsets.only(left: 20, right: 20, top: 40),
+              child: Form(
+                key: _formStateKey,
+                autovalidate: true,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    (errorMessage != ''
+                        ? Center(
+                            child: Text(
+                            errorMessage,
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 15,
+                            ),
+                          ))
+                        : Container()),
+                    SizedBox(
+                      height: 10,
+                    ),
                     Container(
                       padding: EdgeInsets.only(left: 20),
                       child: Text(
@@ -66,8 +91,13 @@ class _LoginPageState extends State<LoginPage> {
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         color: Colors.grey.withOpacity(0.2),
                       ),
-                      child: TextField(
-                        controller: emailController,
+                      child: TextFormField(
+                        validator: validateEmail,
+                        onSaved: (value) {
+                          _emailId = value;
+                        },
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailIdController,
                         style: TextStyle(
                             fontSize: 17,
                             fontWeight: FontWeight.w600,
@@ -103,8 +133,12 @@ class _LoginPageState extends State<LoginPage> {
                       child: Row(
                         children: <Widget>[
                           Expanded(
-                            child: TextField(
-                              controller: passwordController,
+                            child: TextFormField(
+                              validator: validatePassword,
+                              onSaved: (value) {
+                                _password = value;
+                              },
+                              controller: _passwordController,
                               style: TextStyle(
                                   fontSize: 17,
                                   fontWeight: FontWeight.w600,
@@ -145,11 +179,21 @@ class _LoginPageState extends State<LoginPage> {
                                   BorderRadius.all(Radius.circular(15))),
                           child: InkWell(
                             onTap: () {
-                            //    context.read<AuthenticationService>().signIn(
-                            //   email: emailController.text.trim(),
-                            //   password: passwordController.text.trim(),
-                            // );
-                              Navigator.pushNamed(context, "/admin");
+                              if (_formStateKey.currentState.validate()) {
+                                _formStateKey.currentState.save();
+                                signIn(_emailId, _password).then((user) {
+                                  if (user != null) {
+                                    print('Admin Logged in successfully.');
+                                    setState(() {
+                                      successMessage =
+                                          'Logged in successfully.\nYou can now navigate to Home Page.';
+                                    });
+                                    Navigator.pushNamed(context, "/admin");
+                                  } else {
+                                    print('Error while Login.');
+                                  }
+                                });
+                              }
                             },
                             child: Center(
                               child: Text(
@@ -175,7 +219,21 @@ class _LoginPageState extends State<LoginPage> {
                                   BorderRadius.all(Radius.circular(15))),
                           child: InkWell(
                             onTap: () {
-                              Navigator.pushNamed(context, "/employee");
+                              if (_formStateKey.currentState.validate()) {
+                                _formStateKey.currentState.save();
+                                signIn(_emailId, _password).then((user) {
+                                  if (user != null) {
+                                    print('User Logged in successfully.');
+                                    setState(() {
+                                      successMessage =
+                                          'Logged in successfully.\nYou can now navigate to Home Page.';
+                                    });
+                                    Navigator.pushNamed(context, "/employee");
+                                  } else {
+                                    print('Error while Login.');
+                                  }
+                                });
+                              }
                             },
                             child: Center(
                               child: Text(
@@ -212,7 +270,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
             ),
-          )
+          ))
         ],
       ),
     );
@@ -227,5 +285,58 @@ class _LoginPageState extends State<LoginPage> {
   void togglePwdVisibility() {
     hidePwd = !hidePwd;
     setState(() {});
+  }
+
+  String validateEmail(String value) {
+    Pattern pattern =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex = new RegExp(pattern);
+    if (value.isEmpty || !regex.hasMatch(value))
+      return 'Enter Valid Email Id!!!';
+    else
+      return null;
+  }
+
+  String validatePassword(String value) {
+    if (value.trim().isEmpty) {
+      return 'Password is empty!!!';
+    }
+    if (value.length < 6) {
+      return 'Enter an password of length greater than 7';
+    }
+    return null;
+  }
+
+  Future<User> signIn(String email, String password) async {
+    try {
+      UserCredential user = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      assert(user != null);
+      assert(await user.user.getIdToken() != null);
+
+      final currentUser = auth.currentUser;
+      assert(user.user.uid == currentUser.uid);
+      return user.user;
+    } catch (e) {
+      handleError(e);
+      return null;
+    }
+  }
+
+  handleError(PlatformException error) {
+    print(error);
+    switch (error.code) {
+      case 'ERROR_USER_NOT_FOUND':
+        setState(() {
+          errorMessage = 'User Not Found!!!';
+        });
+        break;
+      case 'ERROR_WRONG_PASSWORD':
+        setState(() {
+          errorMessage = 'Wrong Password!!!';
+        });
+        break;
+    }
   }
 }
