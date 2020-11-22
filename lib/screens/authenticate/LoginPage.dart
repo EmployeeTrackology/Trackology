@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emp_tracker/screens/authenticate/SignUpPage.dart';
-import 'package:emp_tracker/screens/appbar.dart';
+import 'package:emp_tracker/screens/authenticate/appbar.dart';
 // import 'package:emp_tracker/services/auth.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';

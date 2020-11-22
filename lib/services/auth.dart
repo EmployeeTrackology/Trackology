@@ -1,26 +1,39 @@
-import 'package:emp_tracker/models/user.dart';
+import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthService {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+abstract class BaseAuth {
+  Future<String> signInWithEmailAndPassword(String email, String password);
+  Future<String> createUserWithEmailAndPassword(String email, String password);
+  Future<String> currentUser();
+  Future<void> signOut();
+}
 
-  //create user obj
-  TheUser _userFirebase(User user){
-    return (user !=null? TheUser(uid:user.uid) : null);
+class Auth implements BaseAuth {
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
+  @override
+  Future<String> signInWithEmailAndPassword(String email, String password) async {
+    
+ var user = await _firebaseAuth.signInWithEmailAndPassword(email: email, password: password);
+    return user?.uid;
   }
 
-  //sign in anon
-  Future signInAnon() async {
-    try {
-      UserCredential result = await _auth.signInAnonymously();
-      User user = result.user;
-      return _userFirebase(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
+  @override
+  Future<String> createUserWithEmailAndPassword(String email, String password) async {
+    var result = await _firebaseAuth.createUserWithEmailAndPassword(email: email, password: password);
+    final user=result.user;
+    return user?.uid;
   }
-  //sign in with email and password
-  //register with email and password
-  //signout
+
+  @override
+  Future<String> currentUser() async {
+    var user = _firebaseAuth.currentUser;
+    // final User user = await _firebaseAuth.currentUser();
+    return user?.uid;
+  }
+
+  @override
+  Future<void> signOut() async {
+    return _firebaseAuth.signOut();
+  }
 }

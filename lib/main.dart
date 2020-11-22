@@ -13,6 +13,7 @@ import 'package:emp_tracker/screens/leave_app_form.dart';
 import 'package:emp_tracker/screens/admin_holidays.dart';
 import 'package:emp_tracker/screens/view_holidays.dart';
 import 'package:emp_tracker/screens/wrapper.dart';
+import 'package:emp_tracker/screens/root_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 // import 'package:provider/provider.dart';
 // import 'authentication_service.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
           ))),
       initialRoute: '/',
       routes: {
-        '/': (context) => MyHomePage(),
+        '/': (context) => RootPage(),
         '/LoginPage': (context) => LoginPage(),
         '/SignUpPage': (context) => SignUpPage(),
         '/admin': (context) => AdminPanel(),
