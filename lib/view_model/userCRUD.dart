@@ -12,13 +12,13 @@ class CRUDModel extends ChangeNotifier {
 
   Future<List<TheUser>> fetchTheUsers() async {
     var result = await _api.getDataCollection();
-    users = result.docs
-        .map((doc) => TheUser.fromMap(doc.data(), doc.id))
-        .toList();
+    users =
+        result.docs.map((doc) => TheUser.fromMap(doc.data(), doc.id)).toList();
     return users;
   }
 
   Stream<QuerySnapshot> fetchTheUsersAsStream() {
+    print(_api);
     return _api.streamDataCollection();
   }
 
