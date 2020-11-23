@@ -1,3 +1,4 @@
+/*
 import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -94,7 +95,7 @@ class UserCard extends StatelessWidget {
       subtitle: Text('${userDetails.emailId}'));
   }
 }
-/*
+*/
 import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -149,7 +150,29 @@ class _ViewEmployeesState extends State<ViewEmployees> {
       backgroundColor: Color(0xffC7D3F4),
       appBar: new MyAppBar("View Employees"),
       body: Container(
-          child: StreamBuilder(
+      child:StreamBuilder<QuerySnapshot>(
+      stream: users.snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+
+        return new ListView(
+          children: snapshot.data.docs.map((DocumentSnapshot document) {
+            return new ListTile(
+              title: new Text(document.data()['username']),
+              subtitle: new Text(document.data()['department']),
+            );
+          }).toList(),
+        );
+      },
+    ),
+          
+          /* StreamBuilder(
               stream: userProvider.fetchTheUsersAsStream(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 print(snapshot.hasData);
@@ -168,7 +191,7 @@ class _ViewEmployeesState extends State<ViewEmployees> {
                 } else {
                   return Text('fetching');
                 }
-              })),
+              })*/),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           print("Go to add employee form");
@@ -194,4 +217,3 @@ class UserCard extends StatelessWidget {
         subtitle: Text('${userDetails.emailId}'));
   }
 }
-*/
