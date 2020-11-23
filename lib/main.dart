@@ -13,11 +13,12 @@ import 'package:emp_tracker/screens/leave_app_form.dart';
 import 'package:emp_tracker/screens/admin_holidays.dart';
 import 'package:emp_tracker/screens/view_holidays.dart';
 import 'package:emp_tracker/screens/wrapper.dart';
-import 'package:emp_tracker/screens/root_page.dart';
+// import 'package:emp_tracker/screens/root_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:provider/provider.dart';
-// import 'authentication_service.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:emp_tracker/locator.dart';
+import 'package:emp_tracker/view_model/userCRUD.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,34 +29,37 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-          scaffoldBackgroundColor: Color(0xffC7D3F4),
-          textTheme: TextTheme(
-              bodyText1: TextStyle(
-            color: Colors.black,
-          ))),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => RootPage(),
-        '/LoginPage': (context) => LoginPage(),
-        '/SignUpPage': (context) => SignUpPage(),
-        '/admin': (context) => AdminPanel(),
-        '/employee': (context) => EmployeePanel(),
-        '/leave_status': (context) => MyLeaves(),
-        '/admin_leave_app': (context) => LeavesApp(),
-        '/add_employee': (context) => AddEmployee(),
-        '/record_attendance': (context) => MarkAttendance(),
-        '/view_employees': (context) => ViewEmployees(),
-        '/attendace_history': (context) => Check(),
-        '/leave_app_form': (context) => LeaveForm(),
-        '/admin_holidays': (context) => Holiday(),
-        '/emp_holidays': (context) => ViewHoliday()
-      },
-      // home:AuthenticationWrapper(),
-    );
+    return MultiProvider(
+        providers: [
+        ChangeNotifierProvider(create: (context)  => locator<CRUDModel>()),
+     
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+              scaffoldBackgroundColor: Color(0xffC7D3F4),
+              textTheme: TextTheme(
+                  bodyText1: TextStyle(
+                color: Colors.black,
+              ))),
+          initialRoute: '/',
+          routes: {
+            '/': (context) => MyHomePage(),
+            '/LoginPage': (context) => LoginPage(),
+            '/SignUpPage': (context) => SignUpPage(),
+            '/admin': (context) => AdminPanel(),
+            '/employee': (context) => EmployeePanel(),
+            '/leave_status': (context) => MyLeaves(),
+            '/admin_leave_app': (context) => LeavesApp(),
+            '/add_employee': (context) => AddEmployee(),
+            '/record_attendance': (context) => MarkAttendance(),
+            '/view_employees': (context) => ViewEmployees(),
+            '/attendace_history': (context) => Check(),
+            '/leave_app_form': (context) => LeaveForm(),
+            '/admin_holidays': (context) => Holiday(),
+            '/emp_holidays': (context) => ViewHoliday()
+          },
+        ) // home:AuthenticationWrapper(),
+        );
   }
 }
-
-

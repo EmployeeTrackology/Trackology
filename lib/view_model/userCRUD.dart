@@ -13,7 +13,7 @@ class CRUDModel extends ChangeNotifier {
   Future<List<TheUser>> fetchTheUsers() async {
     var result = await _api.getDataCollection();
     users = result.docs
-        .map((doc) => TheUser.fromMap(doc.data, doc.documentId))
+        .map((doc) => TheUser.fromMap(doc.data(), doc.id))
         .toList();
     return users;
   }
@@ -24,7 +24,7 @@ class CRUDModel extends ChangeNotifier {
 
   Future<TheUser> getTheUserById(String id) async {
     var doc = await _api.getDocumentById(id);
-    return TheUser.fromMap(doc.data, doc.documentID);
+    return TheUser.fromMap(doc.data(), doc.id);
   }
 
   Future removeTheUser(String id) async {
@@ -38,7 +38,8 @@ class CRUDModel extends ChangeNotifier {
   }
 
   Future addTheUser(TheUser data) async {
-    var result = await _api.addDocument(data.toJson());
+    await _api.addDocument(data.toJson());
+    // var result = await _api.addDocument(data.toJson());
 
     return;
   }
