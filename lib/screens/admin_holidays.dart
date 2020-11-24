@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emp_tracker/screens/appbar.dart';
-import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Holiday extends StatefulWidget {
@@ -16,14 +16,14 @@ class _HolidayState extends State<Holiday> {
     CollectionReference holidays =
         FirebaseFirestore.instance.collection('holidays');
 
-    Future<void> createHoliday() {
-      return holidays
-          .add({'holiday_name': holiday_name, 'date': date})
-          .then((value) => print(" Holidays Added"))
-          .catchError((error) => print("Failed to add holidays: $error"));
-    }
-
     void showalertdialog() {
+      Future<void> createHoliday() {
+        return holidays
+            .add({'holiday_name': holiday_name, 'date': date})
+            .then((value) => print(" Holidays Added"))
+            .catchError((error) => print("Failed to add holidays: $error"));
+      }
+
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
@@ -37,6 +37,9 @@ class _HolidayState extends State<Holiday> {
             children: <Widget>[
               Text("Event name", textAlign: TextAlign.left),
               TextField(
+                  onChanged: (val) {
+                    holiday_name = val;
+                  },
                   autofocus: true,
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Padding(
@@ -46,6 +49,9 @@ class _HolidayState extends State<Holiday> {
 
               Text("Date", textAlign: TextAlign.left),
               TextField(
+                  onChanged: (val) {
+                    date = val;
+                  },
                   autofocus: true,
                   style: TextStyle(fontWeight: FontWeight.bold)),
               Padding(
@@ -96,36 +102,40 @@ class _HolidayState extends State<Holiday> {
       );
     }
 
-    @override
-    Widget build(BuildContext context) {
-      return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: showalertdialog,
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ), //icon
-          backgroundColor: Color(0xff603F83),
-        ), //floating
-        appBar: new MyAppBar("Holidays"), //appbar
-        backgroundColor: Color(0xffC7D3F4),
-        body: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              mycard("New Year", "01-01-2020"),
-              mycard("Makar Sankranti ", " 14-01-2020"),
-              mycard("Republic Day", " 26-01-2020"),
-              mycard("Shivaji Jayanti ", "19-02-2020"),
-              mycard("Shivaratri", " 21-02-2020"),
-              mycard("Holi ", "    10-03-2020"),
-              mycard("Ram Navmi ", " 02-04-2020"),
-              mycard("Mahavir Jayanti ", " 06-04-2020"),
-              mycard("Good Friday ", " 10-04-2020"),
-              mycard("Easy Day ", " 12-04-2020"),
-            ], //widget
-          ), //column
-        ), //singlechild
-      ); //scaffold
-    }
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: showalertdialog,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ), //icon
+        backgroundColor: Color(0xff603F83),
+      ), //floating
+      appBar: new MyAppBar("Holidays"), //appbar
+      backgroundColor: Color(0xffC7D3F4),
+      body: Container(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: holidays.snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError) {
+              return Text('Something went wrong');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Text("Loading");
+            }
+            if (!snapshot.hasData) {
+              return Text("no holidays");
+            }
+            return new ListView(
+              children: snapshot.data.docs.map((DocumentSnapshot document) {
+                return mycard(
+                    document.data()['holiday_name'], document.data()['date']);
+              }).toList(),
+            );
+          },
+        ),
+      ), 
+    ); 
   }
 }
