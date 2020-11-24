@@ -27,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xffC7D3F4),
+       resizeToAvoidBottomPadding: false,
       appBar: new MyAppBar("Log In"),
       body: Column(
         children: <Widget>[
