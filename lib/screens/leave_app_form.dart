@@ -4,24 +4,6 @@ import 'package:emp_tracker/screens/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-// import "package:provider/provider.dart";
-
-// class LeavesList extends StatefulWidget {
-//   @override
-//   _LeavesListState createState() => _LeavesListState();
-// }
-
-// class _LeavesListState extends State<LeavesList> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final leaves = Provider.of<QuerySnapshot>(context);
-//     print(leaves);
-//     for (var doc in leaves.docs) {
-//       print(doc.data);
-//     }
-//     return Container();
-//   }
-// }
 
 class LeaveForm extends StatefulWidget {
   LeaveForm({Key key}) : super(key: key);
@@ -29,13 +11,15 @@ class LeaveForm extends StatefulWidget {
   _LeaveFormState createState() => _LeaveFormState();
 }
 
-enum Options { casual, medical, annual }
-enum LeaveStatus { approved, pending, rejected }
+enum Options { Casual, Medical, Annual }
 
 class _LeaveFormState extends State<LeaveForm> {
-  Options _site = Options.casual;
+  Options _site = Options.Casual;
   String type;
-  DateTime fromDate, toDate;
+  DateTime fromDate = DateTime.now();
+  DateTime toDate = DateTime.now();
+  String leaveType;
+
   final from = TextEditingController(); //from
   final to = TextEditingController(); //to
   int differ = 0;
@@ -50,21 +34,24 @@ class _LeaveFormState extends State<LeaveForm> {
   Widget build(BuildContext context) {
     Future<void> createLeaveApp() async {
       User user = FirebaseAuth.instance.currentUser;
+      Object obj = {
+        'from': from.text,
+        'to': to.text,
+        'appliedDate': DateTime.now().toString().substring(0, 10),
+        'type': type,
+        'leaveStatus': 'pending'
+      };
 
       // Call the user's CollectionReference to add a new user
       await FirebaseFirestore.instance
           .collection("leaves")
           .doc(user.uid)
-          .set({
-            'from': from.text,
-            'to': to.text,
-            'appliedDate': DateTime.now().toString().substring(0, 10),
-            'type': type,
-            'leaveStatus':LeaveStatus.pending
-          })
+          .set(obj)
           .then((value) => print("Leave form Added"))
           .catchError((error) => print("Failed to add leave: $error"));
+          
     }
+    
 
     return Scaffold(
         appBar: new MyAppBar("Leave Application Form"),
@@ -122,7 +109,9 @@ class _LeaveFormState extends State<LeaveForm> {
                             lastDate: DateTime(2100));
                         from.text = date.toString().substring(0, 10);
                         fromDate = date;
-                        differ = toDate.difference(fromDate).inDays;
+                        setState(() {
+                          differ = toDate.difference(fromDate).inDays;
+                        });
                       }),
                 ),
               ], //contianer
@@ -147,7 +136,9 @@ class _LeaveFormState extends State<LeaveForm> {
                             lastDate: DateTime(2100));
                         to.text = date.toString().substring(0, 10);
                         toDate = date;
-                        differ = toDate.difference(fromDate).inDays;
+                        setState(() {
+                          differ = toDate.difference(fromDate).inDays;
+                        });
                       }),
                 ),
               ], //contianer
@@ -171,7 +162,7 @@ class _LeaveFormState extends State<LeaveForm> {
                   title: const Text('Casual Leave',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   leading: Radio(
-                    value: Options.casual,
+                    value: Options.Casual,
                     groupValue: _site,
                     onChanged: (Options value) {
                       setState(() {
@@ -184,7 +175,7 @@ class _LeaveFormState extends State<LeaveForm> {
                   title: const Text('Medical Leave',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   leading: Radio(
-                    value: Options.medical,
+                    value: Options.Medical,
                     groupValue: _site,
                     onChanged: (Options value) {
                       setState(() {
@@ -197,7 +188,7 @@ class _LeaveFormState extends State<LeaveForm> {
                   title: const Text('Annual Leave',
                       style: TextStyle(fontWeight: FontWeight.bold)),
                   leading: Radio(
-                    value: Options.annual,
+                    value: Options.Annual,
                     groupValue: _site,
                     onChanged: (Options value) {
                       setState(() {

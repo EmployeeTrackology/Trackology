@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddEmployee extends StatefulWidget {
   @override
@@ -13,15 +14,35 @@ class _State extends State<AddEmployee> {
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
+  final FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+    Future<User> signUp(email, password) async {
+      try {
+        var result = await auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        var user = result.user;
+        // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
+        assert(user != null);
+        assert(await user.getIdToken() != null);
+        print("User Added");
 
-    Future<void> createUser() {
+        return user;
+      } catch (e) {
+        print(e);
+        // handleError(e);
+        return null;
+      }
+    }
+
+    Future<void> createUser() async {
+      var user = await signUp(email, password);
+      print(user.uid);
       // Call the user's CollectionReference to add a new user
       return users
-          .add({
+          .doc(user.uid)
+          .set({
             'username': username, // John Doe
             'password': password, // Stokes and Sons
             'phone': phone,
@@ -29,7 +50,7 @@ class _State extends State<AddEmployee> {
             'department': department
             // 42
           })
-          .then((value) => print("User Added"))
+          .then((value) =>  Navigator.pushNamed(context, '/admin'))
           .catchError((error) => print("Failed to add user: $error"));
     }
 
@@ -81,7 +102,7 @@ class _State extends State<AddEmployee> {
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     onChanged: (val) {
-                     email = val;
+                      email = val;
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),

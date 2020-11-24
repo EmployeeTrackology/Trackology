@@ -6,33 +6,59 @@ import "package:emp_tracker/screens/appbar.dart";
 // import "package:provider/provider.dart";
 // import 'package:emp_tracker/models/leave.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// class LeavesList extends StatefulWidget {
-//   @override
-//   _LeavesListState createState() => _LeavesListState();
-// }
+class AdminLeaveRow extends StatefulWidget {
+  String name;
+  String type;
+  String from;
+  String to;
+  String appliedOn;
+  String lid;
+  AdminLeaveRow(
+      this.name, this.type, this.from, this.to, this.appliedOn, this.lid);
+  @override
+  _AdminLeaveRowState createState() => _AdminLeaveRowState();
+}
 
-// class _LeavesListState extends State<LeavesList> {
-//   @override
-//   Widget build(BuildContext context) {
-//     final leaves = Provider.of<List<Leave>>(context);
-//     print(leaves);
-//     leaves.forEach((leave) {
-//       print(leave.type);
-//     });
-//     return Container();
-//   }
-// }
+class _AdminLeaveRowState extends State<AdminLeaveRow> {
+  final CollectionReference leaves =
+      FirebaseFirestore.instance.collection('leaves');
 
-class AdminLeaveRow extends StatelessWidget {
-  final String name;
-  final String type;
-  final String from;
-  final String to;
-  final String appliedOn;
+  Future<void> approval() {
+    return leaves
+        .doc(widget.lid)
+        .update({'leaveStatus': 'approved'})
+        .then((value) => print("Leaves updated"))
+        .catchError((error) => print("Failed to upldate leave form: $error"));
+  }
 
-  AdminLeaveRow(this.name, this.type, this.from, this.to, this.appliedOn);
+  Future<void> reject() {
+    return leaves
+        .doc(widget.lid)
+        .update({'leaveStatus': 'rejected'})
+        .then((value) => print("Leaves updated"))
+        .catchError((error) => print("Failed to upldate leave form: $error"));
+  }
+
+  Future<void> getData() async {
+    DocumentSnapshot result = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.lid)
+        .get();
+    print(result);
+    return result;
+  }
+
+  Future<void> _userDetails() async {
+    // final details = await getData();
+    // String name;
+    // setState(() {
+    //   widget.name = details.name;
+    //   // new Text(firstName);
+    // });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -48,15 +74,15 @@ class AdminLeaveRow extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
-                    Text(name,
+                    Text(widget.name,
                         style: TextStyle(
                             fontSize: 15,
                             fontFamily: "Sansita",
                             decoration: TextDecoration.underline,
                             decorationThickness: 1.5)),
-                    Text(type),
-                    Text(from + " to " + to),
-                    Text("Applied on: " + appliedOn)
+                    Text(widget.type),
+                    Text(widget.from + " to " + widget.to),
+                    Text("Applied on: " + widget.appliedOn)
                   ]),
             ),
             margin: EdgeInsets.all(10.0),
@@ -75,7 +101,9 @@ class AdminLeaveRow extends StatelessWidget {
                 'Reject',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
-              onPressed: () {},
+              onPressed: () {
+                reject();
+              },
             )),
         SizedBox(
           width: 10,
@@ -89,7 +117,9 @@ class AdminLeaveRow extends StatelessWidget {
                 'Approve',
                 style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
               ),
-              onPressed: () {},
+              onPressed: () {
+                approval();
+              },
             )),
       ],
     );
@@ -136,14 +166,16 @@ class _LeaveState extends State<LeavesApp> {
                   primary: false,
                   shrinkWrap: true,
                   children: snapshot.data.docs.map((DocumentSnapshot document) {
-                    // print(document.data()['appliedDate']);
+                    // print(document);
                     return AdminLeaveRow(
-                      'employee',
-                      document.data()['type'],
-                      document.data()['from'],
-                      document.data()['to'],
-                      document.data()['appliedDate'],
-                    );
+                        'employee',
+                        document.data()['type'].substring(
+                              8,
+                            ),
+                        document.data()['from'],
+                        document.data()['to'],
+                        document.data()['appliedDate'],
+                        document.id);
                   }).toList(),
                 ),
               );

@@ -26,255 +26,245 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xffC7D3F4),
-       resizeToAvoidBottomPadding: false,
-      appBar: new MyAppBar("Log In"),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 25,
-          ),
-          Center(
-            child: Text(
-              "Sign In to your account",
-              style: TextStyle(
-                fontSize: 30,
-                fontFamily: "Sansita",
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ),
-          Expanded(
-              child: Container(
-            margin: EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(40)),
-              color: Colors.white10.withOpacity(0.2),
-            ),
+        backgroundColor: Color(0xffC7D3F4),
+        resizeToAvoidBottomPadding: false,
+        appBar: new MyAppBar("Log In"),
+        body: SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.only(left: 20, right: 20, top: 40),
-              child: Form(
-                key: _formStateKey,
-                autovalidate: true,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    (errorMessage != ''
-                        ? Center(
-                            child: Text(
-                            errorMessage,
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 15,
-                            ),
-                          ))
-                        : Container()),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 20),
+          margin: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(40)),
+            color: Colors.white10.withOpacity(0.2),
+          ),
+          child: Container(
+            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+            child: Form(
+              key: _formStateKey,
+              autovalidate: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Center(
                       child: Text(
-                        'Email Address',
+                        "Log in to your account",
                         style: TextStyle(
-                          color: Colors.black.withOpacity(0.7),
-                          fontSize: 15,
+                          fontSize: 30,
+                          fontFamily: "Sansita",
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.grey.withOpacity(0.2),
-                      ),
-                      child: TextFormField(
-                        validator: validateEmail,
-                        onSaved: (value) {
-                          _emailId = value;
-                        },
-                        keyboardType: TextInputType.emailAddress,
-                        controller: _emailIdController,
-                        style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black),
-                        decoration: InputDecoration(
-                            //hintText: "Example : test@test.com",
-                            border: InputBorder.none),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Container(
-                      padding: EdgeInsets.only(left: 20),
-                      child: Text(
-                        'Password',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.7),
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Container(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 2, horizontal: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(20)),
-                        color: Colors.grey.withOpacity(0.2),
-                      ),
-                      child: Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: TextFormField(
-                              validator: validatePassword,
-                              onSaved: (value) {
-                                _password = value;
-                              },
-                              controller: _passwordController,
-                              style: TextStyle(
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.black),
-                              obscureText: hidePwd,
-                              decoration: InputDecoration(
-                                  // hintText: "****",
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                          Container(
-                            height: 50,
-                            width: 50,
-                            child: IconButton(
-                              onPressed: togglePwdVisibility,
-                              icon: hidePwd == true
-                                  ? Icon(Icons.visibility_off)
-                                  : Icon(Icons.visibility),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      children: [
-                        Container(
-                          height: 50,
-                          width: 130,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xff603F83), Color(0xff603F83)],
-                                stops: [0, 1],
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: InkWell(
-                            onTap: () {
-                              if (_formStateKey.currentState.validate()) {
-                                _formStateKey.currentState.save();
-                                signIn(_emailId, _password).then((user) {
-                                  if (user != null) {
-                                    print('Admin Logged in successfully.');
-                                    setState(() {
-                                      successMessage =
-                                          'Logged in successfully.\nYou can now navigate to Home Page.';
-                                    });
-                                    Navigator.pushNamed(context, "/admin");
-                                  } else {
-                                    print('Error while Login.');
-                                  }
-                                });
-                              }
-                            },
-                            child: Center(
-                              child: Text(
-                                "Admin Log In",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 15),
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 30),
-                        Container(
-                          height: 50,
-                          width: 130,
-                          decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [Color(0xff603F83), Color(0xff603F83)],
-                                stops: [0, 1],
-                              ),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15))),
-                          child: InkWell(
-                            onTap: () {
-                              if (_formStateKey.currentState.validate()) {
-                                _formStateKey.currentState.save();
-                                signIn(_emailId, _password).then((user) {
-                                  if (user != null) {
-                                    print('User Logged in successfully.');
-                                    setState(() {
-                                      successMessage =
-                                          'Logged in successfully.\nYou can now navigate to Home Page.';
-                                    });
-                                    Navigator.pushNamed(context, "/employee");
-                                  } else {
-                                    print('Error while Login.');
-                                  }
-                                });
-                              }
-                            },
-                            child: Center(
-                              child: Text(
-                                "Employee Log In",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 15),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text("Don't have an account? "),
-                        InkWell(
-                          onTap: openSignUpPage,
+                  (errorMessage != ''
+                      ? Center(
                           child: Text(
-                            "Sign Up",
+                          errorMessage,
+                          style: TextStyle(
+                            color: Colors.red,
+                            fontSize: 15,
+                          ),
+                        ))
+                      : Container()),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      'Email Address',
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.7),
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.grey.withOpacity(0.2),
+                    ),
+                    child: TextFormField(
+                      validator: validateEmail,
+                      onSaved: (value) {
+                        _emailId = value;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      controller: _emailIdController,
+                      style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black),
+                      decoration: InputDecoration(
+                          //hintText: "Example : test@test.com",
+                          border: InputBorder.none),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 20),
+                    child: Text(
+                      'Password',
+                      style: TextStyle(
+                        color: Colors.black.withOpacity(0.7),
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                      color: Colors.grey.withOpacity(0.2),
+                    ),
+                    child: Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: TextFormField(
+                            validator: validatePassword,
+                            onSaved: (value) {
+                              _password = value;
+                            },
+                            controller: _passwordController,
                             style: TextStyle(
-                                color: Colors.deepPurple,
-                                fontWeight: FontWeight.w700),
+                                fontSize: 17,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black),
+                            obscureText: hidePwd,
+                            decoration: InputDecoration(
+                                // hintText: "****",
+                                border: InputBorder.none),
+                          ),
+                        ),
+                        Container(
+                          height: 50,
+                          width: 50,
+                          child: IconButton(
+                            onPressed: togglePwdVisibility,
+                            icon: hidePwd == true
+                                ? Icon(Icons.visibility_off)
+                                : Icon(Icons.visibility),
                           ),
                         )
                       ],
-                    )
-                  ],
-                ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 130,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xff603F83), Color(0xff603F83)],
+                              stops: [0, 1],
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: InkWell(
+                          onTap: () {
+                            if (_formStateKey.currentState.validate()) {
+                              _formStateKey.currentState.save();
+                              signIn(_emailId, _password).then((user) {
+                                if (user != null) {
+                                  print('Admin Logged in successfully.');
+                                  setState(() {
+                                    successMessage =
+                                        'Logged in successfully.\nYou can now navigate to Home Page.';
+                                  });
+                                  Navigator.pushNamed(context, "/admin");
+                                } else {
+                                  print('Error while Login.');
+                                }
+                              });
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              "Admin Log In",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 30),
+                      Container(
+                        height: 50,
+                        width: 130,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xff603F83), Color(0xff603F83)],
+                              stops: [0, 1],
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: InkWell(
+                          onTap: () {
+                            if (_formStateKey.currentState.validate()) {
+                              _formStateKey.currentState.save();
+                              signIn(_emailId, _password).then((user) {
+                                if (user != null) {
+                                  print('User Logged in successfully.');
+                                  setState(() {
+                                    successMessage =
+                                        'Logged in successfully.\nYou can now navigate to Home Page.';
+                                  });
+                                  Navigator.pushNamed(context, "/employee");
+                                } else {
+                                  print('Error while Login.');
+                                }
+                              });
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              "Employee Log In",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Don't have an account? "),
+                      InkWell(
+                        onTap: openSignUpPage,
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                              color: Colors.deepPurple,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    ],
+                  )
+                ],
               ),
             ),
-          ))
-        ],
-      ),
-    );
+          ),
+        )));
   }
 
   void openSignUpPage() {

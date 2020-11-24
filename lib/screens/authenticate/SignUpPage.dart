@@ -226,6 +226,19 @@ class _SignUpPageState extends State<SignUpPage> {
                           ],
                         ),
                       ),
+                       SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text(
+                          'Department',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.7),
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: 20,
                       ),
@@ -273,14 +286,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             borderRadius:
                                 BorderRadius.all(Radius.circular(15))),
                         child: InkWell(
-                          // onTap: () async {
-                          //   if (_formStateKey.currentState.validate()) {
-                          //     print(email);
-                          //     print(password);
-                          //     signUpWithEmail(email, password);
-                          //   }
-                          //   // Navigator.pushNamed(context, '/LoginPage');
-                          // },
                           onTap: () {
                             if (_formStateKey.currentState.validate()) {
                               _formStateKey.currentState.save();
