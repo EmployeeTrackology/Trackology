@@ -1,7 +1,29 @@
+// import 'package:emp_tracker/models/leave.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert';
+// import 'dart:convert';
 import "package:emp_tracker/screens/appbar.dart";
+// import "package:emp_tracker/services/database.dart";
+// import "package:provider/provider.dart";
+// import 'package:emp_tracker/models/leave.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
+// class LeavesList extends StatefulWidget {
+//   @override
+//   _LeavesListState createState() => _LeavesListState();
+// }
+
+// class _LeavesListState extends State<LeavesList> {
+//   @override
+//   Widget build(BuildContext context) {
+//     final leaves = Provider.of<List<Leave>>(context);
+//     print(leaves);
+//     leaves.forEach((leave) {
+//       print(leave.type);
+//     });
+//     return Container();
+//   }
+// }
 
 class AdminLeaveRow extends StatelessWidget {
   final String name;
@@ -74,7 +96,6 @@ class AdminLeaveRow extends StatelessWidget {
   }
 }
 
-
 class LeavesApp extends StatefulWidget {
   @override
   _LeaveState createState() => _LeaveState();
@@ -83,43 +104,56 @@ class LeavesApp extends StatefulWidget {
 class _LeaveState extends State<LeavesApp> {
   @override
   Widget build(BuildContext context) {
-    Future<List<Widget>> createAdminLeaveList() async {
-      List<Widget> items = new List<Widget>();
-      String fn = await DefaultAssetBundle.of(context)
-          .loadString("data_json/admin_emp_leaves.json");
-      List<dynamic> fnJson = jsonDecode(fn);
-      fnJson.forEach((obj) {
-        items.add(AdminLeaveRow(obj['name'], obj['type'], obj['from'],
-            obj['to'], obj['appliedOn']));
-      });
-      // print(items);
-      return items;
-    }
+    // Dynamic data;
 
+    // Future<List<Widget>> createAdminLeaveList() async {
+    //   List<Widget> items = new List<Widget>();
+    //   String fn = await DefaultAssetBundle.of(context)
+    //       .loadString("data_json/admin_emp_leaves.json");
+    //   List<dynamic> fnJson = jsonDecode(fn);
+    //   fnJson.forEach((obj) {
+    //     items.add(AdminLeaveRow(obj['name'], obj['type'], obj['from'],
+    //         obj['to'], obj['appliedOn']));
+    //   });
+    //   // print(items);
+    //   return items;
+    // }
+
+    CollectionReference leaves =
+        FirebaseFirestore.instance.collection('leaves');
     return Scaffold(
       appBar: new MyAppBar("Leave applications"),
-      body:  Container(
-          child: FutureBuilder(
-            initialData: <Widget>[Text("")],
-            future: createAdminLeaveList(),
-            builder: (context, snapshot) {
-              print("Leave application list");
-              if (snapshot.hasData) {
-                return Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: ListView(
-                    primary: false,
-                    shrinkWrap: true,
-                    children: snapshot.data,
-                  ),
-                );
-              } else {
-                print("Loading...");
-                return CircularProgressIndicator();
-              }
-            },
-          ),
+      body: Container(
+        child: StreamBuilder<QuerySnapshot>(
+          stream: leaves.snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            print("Leave application list");
+            if (snapshot.hasData) {
+              return Padding(
+                padding: EdgeInsets.all(8.0),
+                child: ListView(
+                  primary: false,
+                  shrinkWrap: true,
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
+                    // print(document.data()['appliedDate']);
+                    return AdminLeaveRow(
+                      'employee',
+                      document.data()['type'],
+                      document.data()['from'],
+                      document.data()['to'],
+                      document.data()['appliedDate'],
+                    );
+                  }).toList(),
+                ),
+              );
+            } else {
+              print("Loading...");
+              return CircularProgressIndicator();
+            }
+          },
         ),
-      );
+      ),
+    );
   }
 }

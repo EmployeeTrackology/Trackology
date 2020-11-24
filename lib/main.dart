@@ -16,9 +16,9 @@ import 'package:emp_tracker/screens/wrapper.dart';
 // import 'package:emp_tracker/screens/root_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:emp_tracker/locator.dart';
-import 'package:emp_tracker/view_model/userCRUD.dart';
-import 'package:provider/provider.dart';
+// import 'package:emp_tracker/locator.dart';
+// import 'package:emp_tracker/view_model/userCRUD.dart';
+// import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,12 +29,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-        providers: [
-        ChangeNotifierProvider(create: (context)  => locator<CRUDModel>()),
-     
-        ],
-        child: MaterialApp(
+    return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
               scaffoldBackgroundColor: Color(0xffC7D3F4),
@@ -59,7 +54,7 @@ class MyApp extends StatelessWidget {
             '/admin_holidays': (context) => Holiday(),
             '/emp_holidays': (context) => ViewHoliday()
           },
-        ) // home:AuthenticationWrapper(),
+         // home:AuthenticationWrapper(),
         );
   }
 }

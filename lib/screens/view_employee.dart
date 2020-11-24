@@ -111,36 +111,7 @@ class ViewEmployees extends StatefulWidget {
 }
 
 class _ViewEmployeesState extends State<ViewEmployees> {
-  List<TheUser> users;
-
-  final empname = [
-    'Hiral Sheth',
-    'Hasti Shah',
-    'Nishi Shah',
-    'Divya Sheth',
-    'Krishna Patel',
-    'Jenil  Doshi',
-    'Raj Mehta',
-    'Zeel Chheda',
-    'Parth Shah',
-    'Jill Shetty',
-    'Adwait Rane'
-  ];
-
-  final post = [
-    'Manager',
-    'Designer',
-    'HR',
-    'Web Designer',
-    'Content Writer',
-    'Sales',
-    'Data Analyst',
-    'Front End Developer',
-    'Data Analyst',
-    'Software Engineer',
-    'IT',
-    'Data Entry Operator'
-  ];
+  // List<TheUser> users;
 
   @override
   Widget build(BuildContext context) {

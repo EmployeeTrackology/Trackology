@@ -9,7 +9,7 @@ class Holiday extends StatefulWidget {
 }
 
 class _HolidayState extends State<Holiday> {
-  String holiday_name, date;
+  String holidayName, date;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class _HolidayState extends State<Holiday> {
     void showalertdialog() {
       Future<void> createHoliday() {
         return holidays
-            .add({'holiday_name': holiday_name, 'date': date})
+            .add({'holidayName': holidayName, 'date': date})
             .then((value) => print(" Holidays Added"))
             .catchError((error) => print("Failed to add holidays: $error"));
       }
@@ -38,7 +38,7 @@ class _HolidayState extends State<Holiday> {
               Text("Event name", textAlign: TextAlign.left),
               TextField(
                   onChanged: (val) {
-                    holiday_name = val;
+                    holidayName = val;
                   },
                   autofocus: true,
                   style: TextStyle(fontWeight: FontWeight.bold)),
@@ -130,7 +130,7 @@ class _HolidayState extends State<Holiday> {
             return new ListView(
               children: snapshot.data.docs.map((DocumentSnapshot document) {
                 return mycard(
-                    document.data()['holiday_name'], document.data()['date']);
+                    document.data()['holidayName'], document.data()['date']);
               }).toList(),
             );
           },

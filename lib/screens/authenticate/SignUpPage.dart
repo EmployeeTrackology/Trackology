@@ -3,6 +3,7 @@ import 'package:emp_tracker/screens/authenticate/LoginPage.dart';
 import 'package:emp_tracker/screens/authenticate/appbar.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:emp_tracker/services/database.dart';
 
 class SignUpPage extends StatefulWidget {
   @override
@@ -365,23 +366,25 @@ class _SignUpPageState extends State<SignUpPage> {
     }
     return null;
   }
-   handleError(PlatformException error) {
-      print(error);
-      switch (error.code) {
-        case 'ERROR_EMAIL_ALREADY_IN_USE':
-          setState(() {
-            errorMessage = 'Email Id already Exist!!!';
-          });
-          break;
-        default:
-      }
+
+  handleError(PlatformException error) {
+    print(error);
+    switch (error.code) {
+      case 'ERROR_EMAIL_ALREADY_IN_USE':
+        setState(() {
+          errorMessage = 'Email Id already Exist!!!';
+        });
+        break;
+      default:
     }
+  }
 
   Future<User> signUp(email, password) async {
     try {
       var result = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       var user = result.user;
+      // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
       assert(user != null);
       assert(await user.getIdToken() != null);
       return user;
@@ -389,7 +392,6 @@ class _SignUpPageState extends State<SignUpPage> {
       handleError(e);
       return null;
     }
-   
   }
 
   String validateConfirmPassword(String value) {
