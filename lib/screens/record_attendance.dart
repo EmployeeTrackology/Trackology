@@ -54,7 +54,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:emp_tracker/screens/appbar.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart'; //This package provides date formatting and parsing facilities. This library also defines the DateFormat, NumberFormat, and BidiFormatter classes.
 
 class MarkAttendance extends StatefulWidget {
   @override
@@ -69,6 +69,7 @@ class _MarkState extends State<MarkAttendance> {
   String _address;
   @override
   Widget build(BuildContext context) {
+    /*
     Future<void> createAttendance() async {
       User user = FirebaseAuth.instance.currentUser;
       //TimeOfDay now = TimeOfDay.now();
@@ -83,6 +84,45 @@ class _MarkState extends State<MarkAttendance> {
       // Call the user's CollectionReference to add a new user
       await FirebaseFirestore.instance
           .collection("attendance")
+          .doc(user.uid)
+          .set(obj)
+          .then((value) => print("Attendance recorded"))
+          .catchError((error) => print("Failed to record attendance: $error"));
+    }*/
+
+
+    Future<void> createAttendance_in() async {
+      User user = FirebaseAuth.instance.currentUser;
+      //TimeOfDay now = TimeOfDay.now();
+      var now = new DateTime.now();
+      Object obj = {
+        'Date': DateTime.now().toString().substring(0, 10),
+        'Time': new DateFormat("H:m:s").format(now),
+        'type': _type,
+        'place': _address
+      };
+
+      // Call the user's CollectionReference to add a new user
+      await FirebaseFirestore.instance
+          .collection("attendance_in")
+          .doc(user.uid)
+          .set(obj)
+          .then((value) => print("Attendance recorded"))
+          .catchError((error) => print("Failed to record attendance: $error"));
+    }
+    Future<void> createAttendance_out() async {
+      User user = FirebaseAuth.instance.currentUser;
+      var then = new DateTime.now();
+      Object obj = {
+        'Date': DateTime.now().toString().substring(0, 10),
+        'Time': new DateFormat("H:m:s").format(then),
+        'type': _type,
+        'place': _address
+      };
+
+      // Call the user's CollectionReference to add a new user
+      await FirebaseFirestore.instance
+          .collection("attendance_out")
           .doc(user.uid)
           .set(obj)
           .then((value) => print("Attendance recorded"))
@@ -102,7 +142,7 @@ class _MarkState extends State<MarkAttendance> {
               onPressed: () {
                 _getCurrentLocation('in');
                 _type = 'in';
-                createAttendance();
+                createAttendance_in();
               },
             ),
             RaisedButton(
@@ -111,7 +151,7 @@ class _MarkState extends State<MarkAttendance> {
               onPressed: () {
                 _getCurrentLocation('out');
                 _type = 'out';
-                createAttendance();
+                createAttendance_out();
               },
             ),
           ],
