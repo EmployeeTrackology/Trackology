@@ -30,6 +30,7 @@ dependencies:
   geolocator:  ^5.1.3
   geocoding: ^1.0.5
   location_permissions: ^3.0.0
+  intl: ^0.15.8
   http:
   
 

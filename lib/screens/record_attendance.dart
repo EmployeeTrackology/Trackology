@@ -54,25 +54,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:emp_tracker/screens/appbar.dart';
+import 'package:intl/intl.dart';
+
 class MarkAttendance extends StatefulWidget {
   @override
   _MarkState createState() => _MarkState();
 }
+
 class _MarkState extends State<MarkAttendance> {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
   Position _currentPosition;
   String _currentAddress;
+  String _type;
+  String _address;
   @override
   Widget build(BuildContext context) {
-     Future<void> createAttendance() async {
+    Future<void> createAttendance() async {
       User user = FirebaseAuth.instance.currentUser;
-      TimeOfDay now = TimeOfDay.now();
+      //TimeOfDay now = TimeOfDay.now();
+      var now = new DateTime.now();
       Object obj = {
-        
         'Date': DateTime.now().toString().substring(0, 10),
-        'Time':now,
-        'type': type,
-        'place': _currentAddress
+        'Time': new DateFormat("H:m:s").format(now),
+        'type': _type,
+        'place': _address
       };
 
       // Call the user's CollectionReference to add a new user
@@ -82,27 +87,31 @@ class _MarkState extends State<MarkAttendance> {
           .set(obj)
           .then((value) => print("Attendance recorded"))
           .catchError((error) => print("Failed to record attendance: $error"));
-          
     }
+
     return Scaffold(
-     appBar: new MyAppBar("Mark Attendance"),
+      appBar: new MyAppBar("Mark Attendance"),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             if (_currentPosition != null) Text(_currentAddress ?? 'mumbai'),
             RaisedButton(
-              color:Colors.green,
+              color: Colors.green,
               child: Text("IN:Get location"),
               onPressed: () {
                 _getCurrentLocation('in');
+                _type = 'in';
+                createAttendance();
               },
             ),
             RaisedButton(
-              color:Colors.red,
+              color: Colors.red,
               child: Text("OUT:Get location"),
               onPressed: () {
                 _getCurrentLocation('out');
+                _type = 'out';
+                createAttendance();
               },
             ),
           ],
@@ -110,10 +119,11 @@ class _MarkState extends State<MarkAttendance> {
       ),
     );
   }
+
   _getCurrentLocation(String x) {
     geolocator
         .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {    
+        .then((Position position) {
       setState(() {
         _currentPosition = position;
       });
@@ -122,6 +132,7 @@ class _MarkState extends State<MarkAttendance> {
       print(e);
     });
   }
+
   _getAddressFromLatLng() async {
     try {
       List<Placemark> p = await geolocator.placemarkFromCoordinates(
@@ -129,14 +140,13 @@ class _MarkState extends State<MarkAttendance> {
       Placemark place = p[0];
       setState(() {
         print(_currentAddress);
+        _address = _currentAddress;
         _currentAddress =
             "${place.locality}, ${place.postalCode}, ${place.country}";
-            print(_currentAddress);
+        print(_currentAddress);
       });
     } catch (e) {
       print(e);
     }
   }
 }
-
-

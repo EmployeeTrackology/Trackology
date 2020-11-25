@@ -1,0 +1,16 @@
+-------------------- Auto-Git Log --------------------
+		Wed Nov 25 2020 17:23:12 GMT+0530 (India Standard Time)
+------------------------------------------------------
+
+Modified files:
+* lib/screens/record_attendance.dart
+
+
+Created files:
+* .autogit/logs/log-25-10-2020-16-52-53.txt
+
+
+Deleted files:
+
+
+Renamed files:
