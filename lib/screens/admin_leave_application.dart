@@ -30,7 +30,7 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
         .doc(widget.lid)
         .update({'leaveStatus': 'approved'})
         .then((value) => print("Leaves updated"))
-        .catchError((error) => print("Failed to upldate leave form: $error"));
+        .catchError((error) => print("Failed to update leave form: $error"));
   }
 
   Future<void> reject() {
@@ -38,7 +38,7 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
         .doc(widget.lid)
         .update({'leaveStatus': 'rejected'})
         .then((value) => print("Leaves updated"))
-        .catchError((error) => print("Failed to upldate leave form: $error"));
+        .catchError((error) => print("Failed to update leave form: $error"));
   }
 
   Future<void> getData() async {
