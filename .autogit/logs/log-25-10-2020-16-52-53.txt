@@ -1,0 +1,15 @@
+-------------------- Auto-Git Log --------------------
+		Wed Nov 25 2020 16:52:53 GMT+0530 (India Standard Time)
+------------------------------------------------------
+
+Modified files:
+* lib/screens/admin_leave_application.dart
+
+
+Created files:
+
+
+Deleted files:
+
+
+Renamed files:

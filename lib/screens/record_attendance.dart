@@ -50,9 +50,10 @@
 //   }
 // }
 import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
- import 'package:emp_tracker/screens/appbar.dart';
+import 'package:emp_tracker/screens/appbar.dart';
 class MarkAttendance extends StatefulWidget {
   @override
   _MarkState createState() => _MarkState();
@@ -63,6 +64,26 @@ class _MarkState extends State<MarkAttendance> {
   String _currentAddress;
   @override
   Widget build(BuildContext context) {
+     Future<void> createAttendance() async {
+      User user = FirebaseAuth.instance.currentUser;
+      TimeOfDay now = TimeOfDay.now();
+      Object obj = {
+        
+        'Date': DateTime.now().toString().substring(0, 10),
+        'Time':now,
+        'type': type,
+        'place': _currentAddress
+      };
+
+      // Call the user's CollectionReference to add a new user
+      await FirebaseFirestore.instance
+          .collection("attendance")
+          .doc(user.uid)
+          .set(obj)
+          .then((value) => print("Attendance recorded"))
+          .catchError((error) => print("Failed to record attendance: $error"));
+          
+    }
     return Scaffold(
      appBar: new MyAppBar("Mark Attendance"),
       body: Center(
