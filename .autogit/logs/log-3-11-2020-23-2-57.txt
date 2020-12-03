@@ -1,0 +1,15 @@
+-------------------- Auto-Git Log --------------------
+		Thu Dec 03 2020 23:02:57 GMT+0530 (India Standard Time)
+------------------------------------------------------
+
+Modified files:
+* lib/screens/authenticate/LoginPage.dart
+
+
+Created files:
+
+
+Deleted files:
+
+
+Renamed files:

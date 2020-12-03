@@ -164,7 +164,7 @@ class _LoginPageState extends State<LoginPage> {
                     children: [
                       Container(
                         height: 50,
-                        width: 130,
+                        width: 300,
                         decoration: BoxDecoration(
                             gradient: LinearGradient(
                               colors: [Color(0xff603F83), Color(0xff603F83)],
@@ -178,29 +178,30 @@ class _LoginPageState extends State<LoginPage> {
                               _formStateKey.currentState.save();
                               signIn(_emailId, _password).then((user) {
                                 User user = FirebaseAuth.instance.currentUser;
-                                /*if (user != null) {
-                              Future<String> getData() async {
-                              final User user = await FirebaseAuth.instance.currentUser;
-                              final String uid = user.uid.toString();
-                                 return uid;
-                                      }*/
                                 if (user != null) {
                                   FirebaseFirestore.instance
                                       .collection('users')
-                                      .doc('''user.uid''')
+                                      .doc(user.uid) //user.uid
                                       .get()
                                       .then(
                                           (DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists) {
-                                      print(
-                                          'Document data: ${documentSnapshot.data()}');
+                                     
+                              print('Document data: ${documentSnapshot.data()['role']}');
+                                          if (documentSnapshot.data()['role']=='admin')
+                                          {
+                                             Navigator.pushNamed(context, "/admin");
+                                          }
+                                          else{
+                                            Navigator.pushNamed(context, "/employee");
+                                          }
+                                          
                                     } else {
                                       print(
                                           'Document does not exist on the database');
                                     }
                                   });
-
-                                  print('Admin Logged in successfully.');
+                                  print(' Logged in successfully.');
                                   setState(() {
                                     successMessage =
                                         'Logged in successfully.\nYou can now navigate to Home Page.';
@@ -214,47 +215,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: Center(
                             child: Text(
-                              "Admin Log In",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 30),
-                      Container(
-                        height: 50,
-                        width: 130,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Color(0xff603F83), Color(0xff603F83)],
-                              stops: [0, 1],
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        child: InkWell(
-                          onTap: () {
-                            if (_formStateKey.currentState.validate()) {
-                              _formStateKey.currentState.save();
-                              signIn(_emailId, _password).then((user) {
-                                if (user != null) {
-                                  print('User Logged in successfully.');
-                                  setState(() {
-                                    successMessage =
-                                        'Logged in successfully.\nYou can now navigate to Home Page.';
-                                  });
-                                  Navigator.pushNamed(context, "/employee");
-                                } else {
-                                  print('Error while Login.');
-                                }
-                              });
-                            }
-                          },
-                          child: Center(
-                            child: Text(
-                              "Employee Log In",
+                              " Log In",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
