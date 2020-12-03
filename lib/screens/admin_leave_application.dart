@@ -169,9 +169,7 @@ class _LeaveState extends State<LeavesApp> {
                     // print(document);
                     return AdminLeaveRow(
                         'employee',
-                        document.data()['type'].substring(
-                              8,
-                            ),
+                        document.data()['type'].substring(8,),
                         document.data()['from'],
                         document.data()['to'],
                         document.data()['appliedDate'],

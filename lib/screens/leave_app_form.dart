@@ -45,8 +45,8 @@ class _LeaveFormState extends State<LeaveForm> {
       // Call the user's CollectionReference to add a new user
       await FirebaseFirestore.instance
           .collection("leaves")
-          .doc(user.uid)
-          .set(obj)
+          .doc(user.uid).collection("Leaves_sub")
+          .add(obj)
           .then((value) => print("Leave form Added"))
           .catchError((error) => print("Failed to add leave: $error"));
           

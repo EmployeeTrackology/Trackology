@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import "package:emp_tracker/screens/appbar.dart";
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LeaveRow extends StatelessWidget {
-  final String type,from,to,status,appliedOn;
+  final String type, from, to, status, appliedOn;
 
   String _setImage(status) {
     String statusCheck = status;
@@ -36,18 +37,18 @@ class LeaveRow extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: 20),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(type,
-                      style: TextStyle(fontSize: 18, fontFamily: "Sansita")),
-                  Text(from + " to " + to),
-                  Text(status,
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          decorationThickness: 1.5)),
-                  Text("Applied on: " + appliedOn)
-                ]),
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(type,
+                        style: TextStyle(fontSize: 18, fontFamily: "Sansita")),
+                    Text(from + " to " + to),
+                    Text(status,
+                        style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            decorationThickness: 1.5)),
+                    Text("Applied on: " + appliedOn)
+                  ]),
             ),
             margin: EdgeInsets.all(10.0),
             decoration: BoxDecoration(
@@ -69,33 +70,37 @@ class MyLeaves extends StatefulWidget {
 class _LeaveState extends State<MyLeaves> {
   @override
   Widget build(BuildContext context) {
-    Future<List<Widget>> createLeaveList() async {
-      List<Widget> items = new List<Widget>();
-      String fn = await DefaultAssetBundle.of(context)
-          .loadString("data_json/emp_leaves.json");
-      List<dynamic> fnJson = jsonDecode(fn);
-      fnJson.forEach((obj) {
-        items.add(LeaveRow(obj['type'], obj['from'], obj['to'], obj['status'],
-            obj['appliedOn']));
-      });
-      return items;
-    }
-
+    User user = FirebaseAuth.instance.currentUser;
+    var uid = user.uid;
+    CollectionReference empleaves = FirebaseFirestore.instance
+        .collection('leaves')
+        .doc(uid)
+        .collection("Leaves_sub");
     return Scaffold(
       appBar: new MyAppBar("Leave Status"),
       body: Container(
-        child: FutureBuilder(
-          initialData: <Widget>[Text("")],
-          future: createLeaveList(),
-          builder: (context, snapshot) {
-            print("Leave status");
+        child: StreamBuilder<QuerySnapshot>(
+          stream: empleaves.snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            print("Leave application list");
             if (snapshot.hasData) {
               return Padding(
                 padding: EdgeInsets.all(8.0),
                 child: ListView(
                   primary: false,
                   shrinkWrap: true,
-                  children: snapshot.data,
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
+                    // print(document);
+                    return LeaveRow(
+                        document.data()['type'].substring(
+                              8,
+                            ),
+                        document.data()['from'],
+                        document.data()['to'],
+                        document.data()['leaveStatus'],
+                        document.data()['appliedDate']);
+                  }).toList(),
                 ),
               );
             } else {
@@ -105,11 +110,6 @@ class _LeaveState extends State<MyLeaves> {
           },
         ),
       ),
-        // children: [
-        //   LeaveRow("casual", "ahh", "dh", "rejected", "jh"),
-        //   LeaveRow("casual", "ahh", "dh", "approved", "jh"),
-        //   LeaveRow("casual", "ahh", "dh", "pending", "jh"),
-        // ],
-      );
+    );
   }
 }

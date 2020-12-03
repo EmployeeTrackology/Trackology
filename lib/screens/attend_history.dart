@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AttendRow extends StatelessWidget {
   final String type, date, place, time;
@@ -17,7 +19,7 @@ class AttendRow extends StatelessWidget {
           boxShadow: [
             BoxShadow(color: Colors.black12),
           ]),
-      margin: EdgeInsets.all(4.0),
+      margin: EdgeInsets.all(2.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -25,24 +27,18 @@ class AttendRow extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(10),
             width: 250,
-            height: 110,
+            // height: 110,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text("Type: Check " + type, style: TextStyle(fontSize: 20.0)),
                 SizedBox(height: 5),
-                Row(
-                  children: <Widget>[
-                    Text("Date:" + date, style: TextStyle(fontSize: 17.0)),
+                 Text("Date:" + date, style: TextStyle(fontSize: 17.0)),
                     SizedBox(width: 7),
                     Text("Time:" + time, style: TextStyle(fontSize: 17.0)),
-                  ],
-                ),
                 SizedBox(height: 5),
-                Text(
-                  "At " + place,
-                  style: TextStyle(fontSize: 18.0, color: Colors.black54),
+                Text(place??"Mumbai",style: TextStyle(fontSize: 18.0, color: Colors.black54),
                 ),
               ],
             ),
@@ -77,17 +73,23 @@ class _CheckState extends State<Check> {
 
 
   Widget build(BuildContext context) {
-    Future<List<Widget>> checkTimeList() async {
-      List<Widget> items = new List<Widget>();
-      String fn = await DefaultAssetBundle.of(context)
-          .loadString("data_json/emp_attend_history.json");
-      List<dynamic> fnJson = jsonDecode(fn);
-      fnJson.forEach((obj) {
-        items.add(
-            AttendRow(obj['type'], obj['date'], obj['place'], obj['time']));
-      });
-      return items;
-    }
+    // Future<List<Widget>> checkTimeList() async {
+    //   List<Widget> items = new List<Widget>();
+    //   String fn = await DefaultAssetBundle.of(context)
+    //       .loadString("data_json/emp_attend_history.json");
+    //   List<dynamic> fnJson = jsonDecode(fn);
+    //   fnJson.forEach((obj) {
+    //     items.add(
+    //         AttendRow(obj['type'], obj['date'], obj['place'], obj['time']));
+    //   });
+    //   return items;
+    // }
+    User user = FirebaseAuth.instance.currentUser;
+    var uid = user.uid;
+    CollectionReference empAttendance = FirebaseFirestore.instance
+      .collection('attendance')
+      .doc(uid)
+      .collection("Days");
 
     return Scaffold(
         appBar: new MyAppBar("Attendance History"),
@@ -214,26 +216,39 @@ class _CheckState extends State<Check> {
           ),
           // SizedBox(height: 10,),
           Container(
-            child: FutureBuilder(
-              initialData: <Widget>[Text("")],
-              future: checkTimeList(),
-              builder: (context, snapshot) {
-                print("Employee function");
-                if (snapshot.hasData) {
-                  return Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: ListView(
-                      primary: false,
-                      shrinkWrap: true,
-                      children: snapshot.data,
-                    ),
-                  );
-                } else {
-                  print("Loading...");
-                  return CircularProgressIndicator();
-                }
-              },
-            ),
+         child: StreamBuilder<QuerySnapshot>(
+          stream: empAttendance.snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            print("Sttendance history");
+            if (snapshot.hasData) {
+              return Padding(
+                padding: EdgeInsets.all(8.0),
+                child: ListView(
+                  primary: false,
+                  shrinkWrap: true,
+                  children: snapshot.data.docs.map((DocumentSnapshot document) {
+                    print(document.data());
+                    return AttendRow(
+                        document.data()['type'], 
+                        document.data()['Date'],
+                       document.data()['place'],
+                        document.data()['Time']);
+                  }).toList(),
+                  //   return AttendRow(
+                  //       'type', 
+                  //       'Date',
+                  //     'place',
+                  //      'Time');
+                  // }).toList(),
+                ),
+              );
+            } else {
+              print("Loading...");
+              return CircularProgressIndicator();
+            }
+          },
+        ),
           )
         ]));
   }
