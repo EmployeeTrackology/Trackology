@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:emp_tracker/screens/authenticate/SignUpPage.dart';
 import 'package:emp_tracker/screens/authenticate/appbar.dart';
@@ -45,15 +46,15 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Center(
-                      child: Text(
-                        "Log in to your account",
-                        style: TextStyle(
-                          fontSize: 30,
-                          fontFamily: "Sansita",
-                          fontWeight: FontWeight.w700,
-                        ),
+                    child: Text(
+                      "Log in to your account",
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontFamily: "Sansita",
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
+                  ),
                   (errorMessage != ''
                       ? Center(
                           child: Text(
@@ -176,7 +177,29 @@ class _LoginPageState extends State<LoginPage> {
                             if (_formStateKey.currentState.validate()) {
                               _formStateKey.currentState.save();
                               signIn(_emailId, _password).then((user) {
+                                User user = FirebaseAuth.instance.currentUser;
+                                /*if (user != null) {
+                              Future<String> getData() async {
+                              final User user = await FirebaseAuth.instance.currentUser;
+                              final String uid = user.uid.toString();
+                                 return uid;
+                                      }*/
                                 if (user != null) {
+                                  FirebaseFirestore.instance
+                                      .collection('users')
+                                      .doc('''user.uid''')
+                                      .get()
+                                      .then(
+                                          (DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists) {
+                                      print(
+                                          'Document data: ${documentSnapshot.data()}');
+                                    } else {
+                                      print(
+                                          'Document does not exist on the database');
+                                    }
+                                  });
+
                                   print('Admin Logged in successfully.');
                                   setState(() {
                                     successMessage =
