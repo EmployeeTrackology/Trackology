@@ -9,13 +9,6 @@ class MarkAttendance extends StatefulWidget {
   @override
   _MarkState createState() => _MarkState();
 }
-/*
-class time {
-  String intime;
-  String outtime;
-  time(this.intime, this.outtime);
-  Map<String, dynamic> toMap() => {"intime": this.intime, "outtime": this.outtime};
-}*/
 
 class _MarkState extends State<MarkAttendance> {
   final Geolocator geolocator = Geolocator()..forceAndroidLocationManager;
@@ -23,36 +16,61 @@ class _MarkState extends State<MarkAttendance> {
   String _currentAddress;
   String _type;
   String _address;
-  String _intime;
-  String _outtime;
-  List<dynamic> time = [
-    {"intime": "", "outtime": ""}
-  ];
-
   @override
   Widget build(BuildContext context) {
+    
     Future<void> createAttendance() async {
       User user = FirebaseAuth.instance.currentUser;
       //TimeOfDay now = TimeOfDay.now();
       var now = new DateTime.now();
       Object obj = {
         'Date': DateTime.now().toString().substring(0, 10),
+        'Time': new DateFormat("H:m:s").format(now),
         'type': _type,
-        'place': _address,
-        time =[
-        '_intime': new DateFormat("H:m:s").format(now),
-        '_outtime': new DateFormat("H:m:s").format(now),
-        ]
+        'place': _address
       };
 
       // Call the user's CollectionReference to add a new user
       await FirebaseFirestore.instance
-          .collection("new_attendance")
-          .doc(user.uid)
-          .set(obj)
+          .collection("attendance")
+          .doc(user.uid).collection("Days")
+          .add(obj)
           .then((value) => print("Attendance recorded"))
           .catchError((error) => print("Failed to record attendance: $error"));
     }
+
+     _getAddressFromLatLng() async {
+    try {
+      List<Placemark> p = await geolocator.placemarkFromCoordinates(
+          _currentPosition.latitude, _currentPosition.longitude);
+      Placemark place = p[0];
+      setState(() {
+        print(_currentAddress);
+        _address = _currentAddress;
+        _currentAddress =
+            "${place.locality}, ${place.postalCode}, ${place.country}";
+        print(_currentAddress);
+        createAttendance();
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+     _getCurrentLocation(String x) async {
+    geolocator
+        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((Position position) {
+      setState(() {
+        _currentPosition = position;
+      });
+      _getAddressFromLatLng();
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+ 
+
     return Scaffold(
       appBar: new MyAppBar("Mark Attendance"),
       body: Center(
@@ -66,7 +84,6 @@ class _MarkState extends State<MarkAttendance> {
               onPressed: () {
                 _getCurrentLocation('in');
                 _type = 'in';
-                createAttendance();
               },
             ),
             RaisedButton(
@@ -75,7 +92,6 @@ class _MarkState extends State<MarkAttendance> {
               onPressed: () {
                 _getCurrentLocation('out');
                 _type = 'out';
-                createAttendance();
               },
             ),
           ],
@@ -84,33 +100,5 @@ class _MarkState extends State<MarkAttendance> {
     );
   }
 
-  _getCurrentLocation(String x) {
-    geolocator
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
-        .then((Position position) {
-      setState(() {
-        _currentPosition = position;
-      });
-      _getAddressFromLatLng();
-    }).catchError((e) {
-      print(e);
-    });
-  }
-
-  _getAddressFromLatLng() async {
-    try {
-      List<Placemark> p = await geolocator.placemarkFromCoordinates(
-          _currentPosition.latitude, _currentPosition.longitude);
-      Placemark place = p[0];
-      setState(() {
-        print(_currentAddress);
-        _address = _currentAddress;
-        _currentAddress =
-            "${place.locality}, ${place.postalCode}, ${place.country}";
-        print(_currentAddress);
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
+ 
 }
