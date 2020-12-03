@@ -31,37 +31,18 @@ class _MarkState extends State<MarkAttendance> {
 
   @override
   Widget build(BuildContext context) {
-    /*
     Future<void> createAttendance() async {
       User user = FirebaseAuth.instance.currentUser;
       //TimeOfDay now = TimeOfDay.now();
       var now = new DateTime.now();
       Object obj = {
         'Date': DateTime.now().toString().substring(0, 10),
-        'Time': new DateFormat("H:m:s").format(now),
-        'type': _type,
-        'place': _address
-      };
-
-      // Call the user's CollectionReference to add a new user
-      await FirebaseFirestore.instance
-          .collection("attendance")
-          .doc(user.uid)
-          .set(obj)
-          .then((value) => print("Attendance recorded"))
-          .catchError((error) => print("Failed to record attendance: $error"));
-    }*/
-
-    Future<void> createAttendance() async {
-      User user = FirebaseAuth.instance.currentUser;
-      //TimeOfDay now = TimeOfDay.now();
-      var now = new DateTime.now();
-      Object obj = {
-        'Date': DateTime.now().toString().substring(0, 10),
-        '_intime': new DateFormat("H:m:s").format(now),
-        '_outtime': new DateFormat("H:m:s").format(now),
         'type': _type,
         'place': _address,
+        time =[
+        '_intime': new DateFormat("H:m:s").format(now),
+        '_outtime': new DateFormat("H:m:s").format(now),
+        ]
       };
 
       // Call the user's CollectionReference to add a new user
@@ -72,26 +53,6 @@ class _MarkState extends State<MarkAttendance> {
           .then((value) => print("Attendance recorded"))
           .catchError((error) => print("Failed to record attendance: $error"));
     }
-
-    /* Future<void> createAttendance_out() async {
-      User user = FirebaseAuth.instance.currentUser;
-      var then = new DateTime.now();
-      Object obj = {
-        'Date': DateTime.now().toString().substring(0, 10),
-        'Time': new DateFormat("H:m:s").format(then),
-        'type': _type,
-        'place': _address
-      };
-
-      // Call the user's CollectionReference to add a new user
-      await FirebaseFirestore.instance
-          .collection("attendance_out")
-          .doc(user.uid)
-          .set(obj)
-          .then((value) => print("Attendance recorded"))
-          .catchError((error) => print("Failed to record attendance: $error"));
-    }*/
-
     return Scaffold(
       appBar: new MyAppBar("Mark Attendance"),
       body: Center(
