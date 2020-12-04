@@ -3,6 +3,7 @@ import 'package:emp_tracker/screens/authenticate/LoginPage.dart';
 import 'package:emp_tracker/screens/authenticate/appbar.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:emp_tracker/services/database.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -11,24 +12,46 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+    String username, email, phone, password, department, role;
   bool hidePwd = true;
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
   String _emailId = "";
   String _password = "";
   String name = "";
-  String phone = "";
   String errorMessage = '';
   String successMessage = '';
+
   final FirebaseAuth auth = FirebaseAuth.instance;
   final _emailIdController = TextEditingController(text: '');
   final _passwordController = TextEditingController(text: '');
   final _confirmPasswordController = TextEditingController(text: '');
-
+  
   @override
   Widget build(BuildContext context) {
+      CollectionReference users = FirebaseFirestore.instance.collection('users');
+     Future<void> createUser() async {
+      var user = await signUp(email, password);
+      print(user.uid);
+      // Call the user's CollectionReference to add a new user
+      return users
+          .doc(user.uid)
+          .set({
+          
+            'username': username, // John Doe
+            'password': password, // Stokes and Sons
+            'phone': phone,
+            'email': email,
+            'department': department,
+            'role': role
+            // 42
+          })
+          .then((value) => Navigator.pushNamed(context, '/admin'))
+          .catchError((error) => print("Failed to add user: $error"));
+    }
+
     return Scaffold(
         backgroundColor: Color(0xffC7D3F4),
-          resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomPadding: false,
         appBar: new MyAppBar("Sign Up"),
         body: SingleChildScrollView(
           child: Container(
@@ -78,7 +101,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           validator: (val) =>
                               val.isEmpty ? 'Enter a name' : null,
                           onChanged: (val) {
-                            setState(() => name = val);
+                            setState(() => username = val);
                           },
                           style: TextStyle(
                               fontSize: 17,
@@ -226,7 +249,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           ],
                         ),
                       ),
-                       SizedBox(
+                      SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -242,6 +265,32 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(
                         height: 20,
                       ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.withOpacity(0.2),
+                        ),
+                        child: TextFormField(
+                          validator: (val) =>
+                              val.isEmpty ? 'Enter ur department' : null,
+                          onChanged: (val) {
+                            setState(() => department = val);
+                          },
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                              //hintText: "Example : John Doe",
+                              border: InputBorder.none),
+                        ),
+                      ),
+                       SizedBox(
+                        height: 10,
+                      ),
+
                       Container(
                         padding: EdgeInsets.only(left: 20),
                         child: Text(
@@ -274,6 +323,44 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text(
+                          'Role',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.7),
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        padding:
+                            EdgeInsets.symmetric(vertical: 2, horizontal: 20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          color: Colors.grey.withOpacity(0.2),
+                        ),
+                        child: TextFormField(
+                          validator: (val) =>
+                              val.isEmpty ? 'Enter ur role' : null,
+                          onChanged: (val) {
+                            setState(() => role = val);
+                          },
+                          style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black),
+                          decoration: InputDecoration(
+                              //hintText: "Example : John Doe",
+                              border: InputBorder.none),
+                        ),
+                      ),
+                      SizedBox(
                         height: 20,
                       ),
                       Container(
@@ -303,7 +390,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               });
                             }
                           },
-                          child: Center(
+                          //child:Center()
+                          child: RaisedButton(
                             child: Text(
                               "Sign Up",
                               style: TextStyle(
@@ -311,6 +399,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15),
                             ),
+                            onPressed: createUser,
                           ),
                         ),
                       ),

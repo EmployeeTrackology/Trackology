@@ -1,0 +1,16 @@
+-------------------- Auto-Git Log --------------------
+		Fri Dec 04 2020 11:54:04 GMT+0530 (India Standard Time)
+------------------------------------------------------
+
+Modified files:
+* lib/screens/add_employee.dart
+
+
+Created files:
+* .autogit/logs/log-4-11-2020-11-23-31.txt
+
+
+Deleted files:
+
+
+Renamed files:
