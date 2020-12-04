@@ -26,13 +26,19 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+<<<<<<< HEAD
     Future<User> signUp(email, password) async {
       print(email);
       print(password);
+=======
+
+    Future<User> signUp(email, password) async {
+>>>>>>> 42a7d17e37895c8ca366eb153ff84038b041fc99
       try {
         var result = await auth.createUserWithEmailAndPassword(
             email: email, password: password);
         var user = result.user;
+<<<<<<< HEAD
         // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
         assert(user != null);
         assert(await user.getIdToken() != null);
@@ -41,13 +47,26 @@ class _SignUpPageState extends State<SignUpPage> {
       } catch (e) {
         print(e);
         // handleError(e);
+=======
+        print(email);
+        // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
+        assert(user != null);
+        assert(await user.getIdToken() != null);
+        return user;
+      } catch (e) {
+        handleError(e);
+>>>>>>> 42a7d17e37895c8ca366eb153ff84038b041fc99
         return null;
       }
     }
 
+<<<<<<< HEAD
     Future<void> createUser () async {
       print("email:"+email);
       print(password);
+=======
+    Future<void> createUser() async {
+>>>>>>> 42a7d17e37895c8ca366eb153ff84038b041fc99
       var user = await signUp(email, password);
       print(user.uid);
       // Call the user's CollectionReference to add a new user
@@ -372,9 +391,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                              //hintText: "Example : John Doe",
-                              border: InputBorder.none),
+                          decoration: InputDecoration(border: InputBorder.none),
                         ),
                       ),
                       SizedBox(
