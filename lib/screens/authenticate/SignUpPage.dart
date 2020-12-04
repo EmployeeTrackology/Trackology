@@ -29,6 +29,22 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    Future<User> signUp(email, password) async {
+      try {
+        var result = await auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        var user = result.user;
+        // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
+        assert(user != null);
+        assert(await user.getIdToken() != null);
+        return user;
+      } catch (e) {
+        handleError(e);
+        return null;
+      }
+    }
+
     Future<void> createUser() async {
       var user = await signUp(email, password);
       print(user.uid);
@@ -139,7 +155,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           controller: _emailIdController,
                           validator: validateEmail,
                           onSaved: (value) {
-                            _emailId = value;
+                            email = value;
                           },
                           style: TextStyle(
                               fontSize: 17,
@@ -180,7 +196,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 validator: validatePassword,
                                 controller: _passwordController,
                                 onChanged: (val) {
-                                  setState(() => _password = val);
+                                  setState(() => password = val);
                                 },
                                 style: TextStyle(
                                     fontSize: 17,
@@ -470,21 +486,6 @@ class _SignUpPageState extends State<SignUpPage> {
         });
         break;
       default:
-    }
-  }
-
-  Future<User> signUp(email, password) async {
-    try {
-      var result = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      var user = result.user;
-      // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
-      assert(user != null);
-      assert(await user.getIdToken() != null);
-      return user;
-    } catch (e) {
-      handleError(e);
-      return null;
     }
   }
 
