@@ -10,7 +10,7 @@ class AddEmployee extends StatefulWidget {
 }
 
 class _State extends State<AddEmployee> {
-  String username, email, phone, password, department;
+  String username, email, phone, password, department, role;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -47,10 +47,11 @@ class _State extends State<AddEmployee> {
             'password': password, // Stokes and Sons
             'phone': phone,
             'email': email,
-            'department': department
+            'department': department,
+            'role': role
             // 42
           })
-          .then((value) =>  Navigator.pushNamed(context, '/admin'))
+          .then((value) => Navigator.pushNamed(context, '/admin'))
           .catchError((error) => print("Failed to add user: $error"));
     }
 
@@ -131,6 +132,19 @@ class _State extends State<AddEmployee> {
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Department',
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                  child: TextField(
+                    onChanged: (val) {
+                      var r = val.toLowerCase();
+                      role = r;
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Role',
                     ),
                   ),
                 ),
