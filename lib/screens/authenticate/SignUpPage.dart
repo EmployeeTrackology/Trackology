@@ -35,6 +35,7 @@ class _SignUpPageState extends State<SignUpPage> {
         var result = await auth.createUserWithEmailAndPassword(
             email: email, password: password);
         var user = result.user;
+        print(email);
         // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
         assert(user != null);
         assert(await user.getIdToken() != null);
@@ -370,9 +371,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                              //hintText: "Example : John Doe",
-                              border: InputBorder.none),
+                          decoration: InputDecoration(border: InputBorder.none),
                         ),
                       ),
                       SizedBox(
