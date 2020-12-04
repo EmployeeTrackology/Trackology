@@ -6,7 +6,7 @@ import "package:emp_tracker/screens/appbar.dart";
 // import "package:provider/provider.dart";
 // import 'package:emp_tracker/models/leave.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 class AdminLeaveRow extends StatefulWidget {
   String name;
@@ -24,6 +24,20 @@ class AdminLeaveRow extends StatefulWidget {
 class _AdminLeaveRowState extends State<AdminLeaveRow> {
   final CollectionReference leaves =
       FirebaseFirestore.instance.collection('leaves');
+  var leaves2;
+  Future<void> getLeaves() {
+    return FirebaseFirestore.instance
+        .collection("users")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((element) {
+        // var leaves2 =
+        //     FirebaseFirestore.instance.collection("Leaves_sub").get().then(
+        //         // print(leaves2.docs.map);
+        //         );
+      });
+    });
+  }
 
   Future<void> approval() {
     return leaves
@@ -119,6 +133,7 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
               ),
               onPressed: () {
                 approval();
+                getLeaves();
               },
             )),
       ],
@@ -169,7 +184,9 @@ class _LeaveState extends State<LeavesApp> {
                     // print(document);
                     return AdminLeaveRow(
                         'employee',
-                        document.data()['type'].substring(8,),
+                        document.data()['type'].substring(
+                              8,
+                            ),
                         document.data()['from'],
                         document.data()['to'],
                         document.data()['appliedDate'],

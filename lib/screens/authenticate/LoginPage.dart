@@ -206,7 +206,6 @@ class _LoginPageState extends State<LoginPage> {
                                     successMessage =
                                         'Logged in successfully.\nYou can now navigate to Home Page.';
                                   });
-                                  Navigator.pushNamed(context, "/admin");
                                 } else {
                                   print('Error while Login.');
                                 }
