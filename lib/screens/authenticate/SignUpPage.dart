@@ -12,7 +12,7 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-    String username, email, phone, password, department, role;
+  String username, email, phone, password, department, role;
   bool hidePwd = true;
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
   String _emailId = "";
@@ -25,18 +25,17 @@ class _SignUpPageState extends State<SignUpPage> {
   final _emailIdController = TextEditingController(text: '');
   final _passwordController = TextEditingController(text: '');
   final _confirmPasswordController = TextEditingController(text: '');
-  
+
   @override
   Widget build(BuildContext context) {
-      CollectionReference users = FirebaseFirestore.instance.collection('users');
-     Future<void> createUser() async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    Future<void> createUser() async {
       var user = await signUp(email, password);
       print(user.uid);
       // Call the user's CollectionReference to add a new user
       return users
           .doc(user.uid)
           .set({
-          
             'username': username, // John Doe
             'password': password, // Stokes and Sons
             'phone': phone,
@@ -287,10 +286,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               border: InputBorder.none),
                         ),
                       ),
-                       SizedBox(
+                      SizedBox(
                         height: 10,
                       ),
-
                       Container(
                         padding: EdgeInsets.only(left: 20),
                         child: Text(
@@ -349,7 +347,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           validator: (val) =>
                               val.isEmpty ? 'Enter ur role' : null,
                           onChanged: (val) {
-                            setState(() => role = val);
+                            var r = val.toLowerCase();
+                            setState(() => role = r);
                           },
                           style: TextStyle(
                               fontSize: 17,
