@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import "package:emp_tracker/screens/appbar.dart";
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:emp_tracker/screens/authenticate/LoginPage.dart';
+import 'package:emp_tracker/screens/authenticate/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AddEmployee extends StatefulWidget {
+class SignUpPage extends StatefulWidget {
   @override
-  _State createState() => _State();
+  _SignUpPageState createState() => _SignUpPageState();
 }
 
-class _State extends State<AddEmployee> {
+class _SignUpPageState extends State<SignUpPage> {
   String username, email, phone, password, department, role;
 
   TextEditingController nameController = TextEditingController();
@@ -51,13 +51,13 @@ class _State extends State<AddEmployee> {
             'role': role
             // 42
           })
-          .then((value) => Navigator.pushNamed(context, '/admin'))
+          .then((value) => Navigator.pushNamed(context, '/LoginPage'))
           .catchError((error) => print("Failed to add user: $error"));
     }
 
     return Scaffold(
         backgroundColor: Color(0xffC7D3F4),
-        appBar: new MyAppBar("Add Employee"),
+        appBar: new MyAppBar("Sign Up"),
         body: Padding(
             padding: EdgeInsets.all(10),
             child: ListView(

@@ -15,8 +15,9 @@ class AdminLeaveRow extends StatefulWidget {
   String to;
   String appliedOn;
   String lid;
-  AdminLeaveRow(
-      this.name, this.type, this.from, this.to, this.appliedOn, this.lid);
+  String eId;
+  AdminLeaveRow(this.name, this.type, this.from, this.to, this.appliedOn,
+      this.lid, this.eId);
   @override
   _AdminLeaveRowState createState() => _AdminLeaveRowState();
 }
@@ -25,22 +26,12 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
   final CollectionReference leaves =
       FirebaseFirestore.instance.collection('leaves');
   var leaves2;
-  Future<void> getLeaves() {
-    return FirebaseFirestore.instance
-        .collection("users")
-        .get()
-        .then((querySnapshot) {
-      querySnapshot.docs.forEach((element) {
-        // var leaves2 =
-        //     FirebaseFirestore.instance.collection("Leaves_sub").get().then(
-        //         // print(leaves2.docs.map);
-        //         );
-      });
-    });
-  }
+  List leaveApps = [];
 
   Future<void> approval() {
     return leaves
+        .doc(widget.eId)
+        .collection('Leaves_sub')
         .doc(widget.lid)
         .update({'leaveStatus': 'approved'})
         .then((value) => print("Leaves updated"))
@@ -49,28 +40,12 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
 
   Future<void> reject() {
     return leaves
+        .doc(widget.eId)
+        .collection('Leaves_sub')
         .doc(widget.lid)
         .update({'leaveStatus': 'rejected'})
         .then((value) => print("Leaves updated"))
         .catchError((error) => print("Failed to update leave form: $error"));
-  }
-
-  Future<void> getData() async {
-    DocumentSnapshot result = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(widget.lid)
-        .get();
-    print(result);
-    return result;
-  }
-
-  Future<void> _userDetails() async {
-    // final details = await getData();
-    // String name;
-    // setState(() {
-    //   widget.name = details.name;
-    //   // new Text(firstName);
-    // });
   }
 
   @override
@@ -133,7 +108,6 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
               ),
               onPressed: () {
                 approval();
-                getLeaves();
               },
             )),
       ],
@@ -147,32 +121,81 @@ class LeavesApp extends StatefulWidget {
 }
 
 class _LeaveState extends State<LeavesApp> {
+  static List leaveApps2 = [];
+  static List leaveAppsId = [];
+  static List empId = [];
+  static List eName = [];
   @override
   Widget build(BuildContext context) {
-    // Dynamic data;
+    Future<DocumentSnapshot> getData(String eid) async {
+      print("eoi " + eid);
+      DocumentSnapshot result =
+          await FirebaseFirestore.instance.collection('users').doc(eid).get();
+      print(result);
+      return result;
+    }
 
-    // Future<List<Widget>> createAdminLeaveList() async {
-    //   List<Widget> items = new List<Widget>();
-    //   String fn = await DefaultAssetBundle.of(context)
-    //       .loadString("data_json/admin_emp_leaves.json");
-    //   List<dynamic> fnJson = jsonDecode(fn);
-    //   fnJson.forEach((obj) {
-    //     items.add(AdminLeaveRow(obj['name'], obj['type'], obj['from'],
-    //         obj['to'], obj['appliedOn']));
-    //   });
-    //   // print(items);
-    //   return items;
-    // }
+    Future<String> userDetails(String eid) async {
+      final details = await getData(eid);
+      String name = details.data()['username'];
+      print(name);
+      setState(() {
+        // widget.name = details['name'];
+      });
+      return name;
+    }
+
+    Future<List<Widget>> getLeaves() async {
+      List x = await FirebaseFirestore.instance
+          .collection("leaves")
+          .get()
+          .then((val) => val.docs);
+      for (int i = 0; i < x.length; i++) {
+        print(x[i].id);
+        FirebaseFirestore.instance
+            .collection("leaves")
+            .doc(x[i].id)
+            .collection("Leaves_sub")
+            .get()
+            .then((value) {
+          value.docs.forEach((ele) {
+            leaveApps2.add(ele.data());
+            leaveAppsId.add(ele.id);
+            empId.add(x[i].id);
+            userDetails(x[i].id).then((na) {
+              eName.add(na);
+            });
+          });
+        });
+      }
+      print(leaveApps2.length);
+      // print(leaveApps2);
+      List<Widget> items = new List<Widget>();
+      int k = 0;
+      leaveApps2.forEach((element) {
+        print("HIIIII");
+        print(element);
+        print(leaveAppsId[k]);
+        // var name = await userDetails(empId[k]);
+        if (element['leaveStatus'] == "pending") {
+          items.add(AdminLeaveRow(eName[k], element['type'], element['from'],
+              element['to'], element['appliedDate'], leaveAppsId[k], empId[k]));
+        }
+
+        k++;
+      });
+      return (items);
+    }
 
     CollectionReference leaves =
         FirebaseFirestore.instance.collection('leaves');
     return Scaffold(
       appBar: new MyAppBar("Leave applications"),
       body: Container(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: leaves.snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        child: FutureBuilder(
+          initialData: <Widget>[Text("")],
+          future: getLeaves(),
+          builder: (context, snapshot) {
             print("Leave application list");
             if (snapshot.hasData) {
               return Padding(
@@ -180,18 +203,7 @@ class _LeaveState extends State<LeavesApp> {
                 child: ListView(
                   primary: false,
                   shrinkWrap: true,
-                  children: snapshot.data.docs.map((DocumentSnapshot document) {
-                    // print(document);
-                    return AdminLeaveRow(
-                        'employee',
-                        document.data()['type'].substring(
-                              8,
-                            ),
-                        document.data()['from'],
-                        document.data()['to'],
-                        document.data()['appliedDate'],
-                        document.id);
-                  }).toList(),
+                  children: snapshot.data,
                 ),
               );
             } else {

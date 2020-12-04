@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:emp_tracker/screens/authenticate/LoginPage.dart';
-import 'package:emp_tracker/screens/authenticate/SignUpPage.dart';
+import 'package:emp_tracker/screens/authenticate/SignUpPage2.dart';
 import 'package:emp_tracker/screens/admin_panel.dart';
 import 'package:emp_tracker/screens/employee_panel.dart';
 import 'package:emp_tracker/screens/leave_status.dart';

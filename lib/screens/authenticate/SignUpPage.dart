@@ -15,9 +15,6 @@ class _SignUpPageState extends State<SignUpPage> {
   String username, email, phone, password, department, role;
   bool hidePwd = true;
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
-  String _emailId = "";
-  String _password = "";
-  String name = "";
   String errorMessage = '';
   String successMessage = '';
 
@@ -29,7 +26,28 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    Future<void> createUser() async {
+    Future<User> signUp(email, password) async {
+      print(email);
+      print(password);
+      try {
+        var result = await auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        var user = result.user;
+        // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
+        assert(user != null);
+        assert(await user.getIdToken() != null);
+        print("User Added");
+        return user;
+      } catch (e) {
+        print(e);
+        // handleError(e);
+        return null;
+      }
+    }
+
+    Future<void> createUser () async {
+      print("email:"+email);
+      print(password);
       var user = await signUp(email, password);
       print(user.uid);
       // Call the user's CollectionReference to add a new user
@@ -139,7 +157,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           controller: _emailIdController,
                           validator: validateEmail,
                           onSaved: (value) {
-                            _emailId = value;
+                            email = value;
                           },
                           style: TextStyle(
                               fontSize: 17,
@@ -180,7 +198,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 validator: validatePassword,
                                 controller: _passwordController,
                                 onChanged: (val) {
-                                  setState(() => _password = val);
+                                  setState(() => password = val);
                                 },
                                 style: TextStyle(
                                     fontSize: 17,
@@ -273,7 +291,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         child: TextFormField(
                           validator: (val) =>
-                              val.isEmpty ? 'Enter ur department' : null,
+                              val.isEmpty ? 'Enter your department' : null,
                           onChanged: (val) {
                             setState(() => department = val);
                           },
@@ -345,7 +363,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         child: TextFormField(
                           validator: (val) =>
-                              val.isEmpty ? 'Enter ur role' : null,
+                              val.isEmpty ? 'Enter your role' : null,
                           onChanged: (val) {
                             var r = val.toLowerCase();
                             setState(() => role = r);
@@ -362,46 +380,28 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(
                         height: 20,
                       ),
-                      Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [Color(0xff603F83), Color(0xff603F83)],
-                              stops: [0, 1],
-                            ),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        child: InkWell(
-                          onTap: () {
-                            if (_formStateKey.currentState.validate()) {
-                              _formStateKey.currentState.save();
-                              signUp(_emailId, _password).then((user) {
-                                if (user != null) {
-                                  print('Registered Successfully.');
-                                  Navigator.pushNamed(context, '/LoginPage');
-                                  setState(() {
-                                    successMessage =
-                                        'Registered Successfully.\nYou can now navigate to Login Page.';
-                                  });
-                                } else {
-                                  print('Error while Login.');
-                                }
-                              });
-                            }
-                          },
-                          //child:Center()
-                          child: RaisedButton(
-                            child: Text(
-                              "Sign Up",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            ),
-                            onPressed: createUser,
-                          ),
-                        ),
+                       Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Color(0xff603FF3), Color(0xff603F83)],
+                        stops: [0, 1],
                       ),
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    padding: EdgeInsets.all(5),
+                    child: RaisedButton(
+                      textColor: Colors.white,
+                      color: Color(0xff603F83),
+                      child: Text(
+                        'ADD',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w500, fontSize: 30),
+                      ),
+                      onPressed:createUser
+
+                      
+                    )),
                       SizedBox(
                         height: 20,
                       ),
@@ -470,21 +470,6 @@ class _SignUpPageState extends State<SignUpPage> {
         });
         break;
       default:
-    }
-  }
-
-  Future<User> signUp(email, password) async {
-    try {
-      var result = await auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      var user = result.user;
-      // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
-      assert(user != null);
-      assert(await user.getIdToken() != null);
-      return user;
-    } catch (e) {
-      handleError(e);
-      return null;
     }
   }
 
