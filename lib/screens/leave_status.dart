@@ -96,9 +96,7 @@ class _LeaveState extends State<MyLeaves> {
                   children: snapshot.data.docs.map((DocumentSnapshot document) {
                     // print(document);
                     return LeaveRow(
-                        document.data()['type'].substring(
-                              8,
-                            ),
+                        document.data()['type'],//.substring( 8,),
                         document.data()['from'],
                         document.data()['to'],
                         document.data()['leaveStatus'],
