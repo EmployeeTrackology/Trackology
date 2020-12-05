@@ -1,7 +1,7 @@
 // import 'dart:convert';
 import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
-import 'dart:async';
+// import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import "package:emp_tracker/screens/admin_attend_history.dart";
@@ -62,6 +62,7 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   DateTime selectedDate = DateTime.now();
+  /*
   Future<Null> _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
         context: context,
@@ -74,6 +75,7 @@ class _HistoryState extends State<History> {
         selectedDate = picked;
       });
   }
+  */
 
   @override
   Widget build(BuildContext context) {
@@ -88,7 +90,7 @@ class _HistoryState extends State<History> {
     return Scaffold(
         appBar: new MyAppBar("Attendance History"),
         body: ListView(children: [
-          Row(
+         /* Row(
             children: [
               Expanded(
                 child: Container(
@@ -210,6 +212,7 @@ class _HistoryState extends State<History> {
               ),
             ],
           ),
+          */
           // SizedBox(height: 10,),
           Container(
             child: StreamBuilder<QuerySnapshot>(
