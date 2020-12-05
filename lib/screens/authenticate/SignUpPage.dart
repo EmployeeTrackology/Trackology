@@ -12,61 +12,37 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  String username, email, phone, password, department, role;
   bool hidePwd = true;
   final GlobalKey<FormState> _formStateKey = GlobalKey<FormState>();
+  String username, email, phone, password, department, role;
   String errorMessage = '';
   String successMessage = '';
-
+  TextEditingController nameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
   final FirebaseAuth auth = FirebaseAuth.instance;
-  final _emailIdController = TextEditingController(text: '');
-  final _passwordController = TextEditingController(text: '');
-  final _confirmPasswordController = TextEditingController(text: '');
-
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-<<<<<<< HEAD
     Future<User> signUp(email, password) async {
-      print(email);
-      print(password);
-=======
-
-    Future<User> signUp(email, password) async {
->>>>>>> 42a7d17e37895c8ca366eb153ff84038b041fc99
       try {
         var result = await auth.createUserWithEmailAndPassword(
             email: email, password: password);
         var user = result.user;
-<<<<<<< HEAD
         // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
         assert(user != null);
         assert(await user.getIdToken() != null);
         print("User Added");
+
         return user;
       } catch (e) {
         print(e);
         // handleError(e);
-=======
-        print(email);
-        // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
-        assert(user != null);
-        assert(await user.getIdToken() != null);
-        return user;
-      } catch (e) {
-        handleError(e);
->>>>>>> 42a7d17e37895c8ca366eb153ff84038b041fc99
         return null;
       }
     }
 
-<<<<<<< HEAD
-    Future<void> createUser () async {
-      print("email:"+email);
-      print(password);
-=======
     Future<void> createUser() async {
->>>>>>> 42a7d17e37895c8ca366eb153ff84038b041fc99
       var user = await signUp(email, password);
       print(user.uid);
       // Call the user's CollectionReference to add a new user
@@ -143,6 +119,7 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: Colors.black),
+                          controller: nameController,
                           decoration: InputDecoration(
                               //hintText: "Example : John Doe",
                               border: InputBorder.none),
@@ -173,7 +150,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
-                          controller: _emailIdController,
                           validator: validateEmail,
                           onSaved: (value) {
                             email = value;
@@ -215,7 +191,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             Expanded(
                               child: TextFormField(
                                 validator: validatePassword,
-                                controller: _passwordController,
+                                controller: passwordController,
                                 onChanged: (val) {
                                   setState(() => password = val);
                                 },
@@ -256,7 +232,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             Expanded(
                               child: TextFormField(
                                 validator: validateConfirmPassword,
-                                controller: _confirmPasswordController,
+                                controller: confirmPassword,
                                 style: TextStyle(
                                     fontSize: 17,
                                     fontWeight: FontWeight.w600,
@@ -309,8 +285,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: Colors.grey.withOpacity(0.2),
                         ),
                         child: TextFormField(
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter your department' : null,
                           onChanged: (val) {
                             setState(() => department = val);
                           },
@@ -318,13 +292,8 @@ class _SignUpPageState extends State<SignUpPage> {
                               fontSize: 17,
                               fontWeight: FontWeight.w600,
                               color: Colors.black),
-                          decoration: InputDecoration(
-                              //hintText: "Example : John Doe",
-                              border: InputBorder.none),
+                          decoration: InputDecoration(border: InputBorder.none),
                         ),
-                      ),
-                      SizedBox(
-                        height: 10,
                       ),
                       Container(
                         padding: EdgeInsets.only(left: 20),
@@ -357,9 +326,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           decoration: InputDecoration(border: InputBorder.none),
                         ),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
                       Container(
                         padding: EdgeInsets.only(left: 20),
                         child: Text(
@@ -371,7 +337,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         ),
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                       Container(
                         padding:
@@ -381,11 +347,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: Colors.grey.withOpacity(0.2),
                         ),
                         child: TextFormField(
-                          validator: (val) =>
-                              val.isEmpty ? 'Enter your role' : null,
                           onChanged: (val) {
-                            var r = val.toLowerCase();
-                            setState(() => role = r);
+                            setState(() => role = val);
                           },
                           style: TextStyle(
                               fontSize: 17,
@@ -397,28 +360,44 @@ class _SignUpPageState extends State<SignUpPage> {
                       SizedBox(
                         height: 20,
                       ),
-                       Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xff603FF3), Color(0xff603F83)],
-                        stops: [0, 1],
+                      Container(
+                        height: 50,
+                        decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [Color(0xff603F83), Color(0xff603F83)],
+                              stops: [0, 1],
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        child: InkWell(
+                          onTap: () {
+                            if (_formStateKey.currentState.validate()) {
+                              _formStateKey.currentState.save();
+                              signUp(email, password).then((user) {
+                                if (user != null) {
+                                  print('Registered Successfully.');
+                                  Navigator.pushNamed(context, '/LoginPage');
+                                  setState(() {
+                                    successMessage =
+                                        'Registered Successfully.\nYou can now navigate to Login Page.';
+                                  });
+                                } else {
+                                  print('Error while Login.');
+                                }
+                              });
+                            }
+                          },
+                          child: Center(
+                            child: Text(
+                              "Sign Up",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 15),
+                            ),
+                          ),
+                        ),
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
-                    padding: EdgeInsets.all(5),
-                    child: RaisedButton(
-                      textColor: Colors.white,
-                      color: Color(0xff603F83),
-                      child: Text(
-                        'ADD',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 30),
-                      ),
-                      onPressed:createUser
-
-                      
-                    )),
                       SizedBox(
                         height: 20,
                       ),
@@ -490,8 +469,23 @@ class _SignUpPageState extends State<SignUpPage> {
     }
   }
 
+  Future<User> signUp(email, password) async {
+    try {
+      var result = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+      var user = result.user;
+      // await DatabaseService(uid:user.uid).updateUserLeave('', '', '','',false);
+      assert(user != null);
+      assert(await user.getIdToken() != null);
+      return user;
+    } catch (e) {
+      handleError(e);
+      return null;
+    }
+  }
+
   String validateConfirmPassword(String value) {
-    if (value.trim() != _passwordController.text.trim()) {
+    if (value.trim() != passwordController.text.trim()) {
       return 'Password Mismatch!!!';
     }
     return null;

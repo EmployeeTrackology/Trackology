@@ -186,16 +186,15 @@ class _LoginPageState extends State<LoginPage> {
                                       .then(
                                           (DocumentSnapshot documentSnapshot) {
                                     if (documentSnapshot.exists) {
-                                     
-                              print('Document data: ${documentSnapshot.data()['role']}');
-                                          if (documentSnapshot.data()['role']=='admin')
-                                          {
-                                             Navigator.pushNamed(context, "/admin");
-                                          }
-                                          else{
-                                            Navigator.pushNamed(context, "/employee");
-                                          }
-                                          
+                                      print(
+                                          'Document data: ${documentSnapshot.data()['role']}');
+                                      if (documentSnapshot.data()['role'] ==
+                                          'admin') {
+                                        Navigator.pushNamed(context, "/admin");
+                                      } else {
+                                        Navigator.pushNamed(
+                                            context, "/employee");
+                                      }
                                     } else {
                                       print(
                                           'Document does not exist on the database');
