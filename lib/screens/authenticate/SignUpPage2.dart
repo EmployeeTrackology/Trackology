@@ -44,11 +44,11 @@ class _SignUpPageState extends State<SignUpPage> {
           .doc(user.uid)
           .set({
             'username': username, // John Doe
-            'password': password, // Stokes and Sons
+            //'password': password, 
             'phone': phone,
             'email': email,
             'department': department,
-            'role': role
+            'role': 'employee'
             // 42
           })
           .then((value) => Navigator.pushNamed(context, '/LoginPage'))
@@ -66,11 +66,12 @@ class _SignUpPageState extends State<SignUpPage> {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Enter employee details',
+                         "Create Your Account",
                       style: TextStyle(
-                          color: Colors.black,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20),
+                         fontSize: 30,
+                            fontFamily: "Sansita",
+                            fontWeight: FontWeight.w700,
+                            ),
                     )),
                 Container(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -137,7 +138,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                 ),
-                Container(
+                /*Container(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
                     onChanged: (val) {
@@ -149,7 +150,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       labelText: 'Role',
                     ),
                   ),
-                ),
+                ),*/
                 SizedBox(height: 20),
                 Container(
                     height: 50,
@@ -165,13 +166,34 @@ class _SignUpPageState extends State<SignUpPage> {
                       textColor: Colors.white,
                       color: Color(0xff603F83),
                       child: Text(
-                        'ADD',
+                        'Sign Up',
                         style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 30),
+                            fontWeight: FontWeight.w500, fontSize: 15),
                       ),
                       onPressed: createUser,
                     )),
+                    SizedBox(height: 20),
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text("Already have an account? "),
+                          InkWell(
+                            onTap: openLoginPage,
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                  color: Colors.deepPurple,
+                                  fontWeight: FontWeight.w700),
+                            ),
+                          )
+                        ],
+                      ),
               ],
             )));
+  }
+   void openLoginPage() {
+    Navigator.pop(context);
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
 }

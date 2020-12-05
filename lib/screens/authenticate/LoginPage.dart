@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:emp_tracker/screens/authenticate/SignUpPage.dart';
+import 'package:emp_tracker/screens/authenticate/SignUpPage2.dart';
 import 'package:emp_tracker/screens/authenticate/appbar.dart';
 // import 'package:emp_tracker/services/auth.dart';
 import 'package:flutter/services.dart';
