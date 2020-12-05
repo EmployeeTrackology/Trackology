@@ -1,79 +1,85 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=50px src="https://b7.pngbarn.com/png/359/299/android-job-scheduler-computer-software-any-do-task-android-png-clip-art-thumbnail.png"</a>
+ <img width=200px src="https://5.imimg.com/data5/VB/OU/GLADMIN-13097209/employee-tracking-system-solutions-500x500.png "></a>
 </p>
-<h1 align = 'center'> Task Diary</h1>
-
-<br>
-
-[![](https://img.shields.io/badge/Made_with-Python3-blue?style=for-the-badge&logo=python)](https://www.python.org "Python3")
-[![](https://img.shields.io/badge/Made_with-Postgresql-red?style=for-the-badge&logo=Postgresql)](https://www.postgresql.org/)
-
-</p>
+<h1 align = 'center'><b>Employee Trackology</b></h1>
 
 ## Description ##
-
-Task Diary is a desktop application that enables user to keep all tasks in one application.User can filter the tasks and get notification of tasks.
+Maintaining the daily records of employees' attendance ,their leaves status physically consumes ample amount of time and there are chances of making mistakes .Thus there is a need to have a software application which helps employees  to keep track of  their attendance ,leave status. 
+<p>Hence this application helps employees and the employer in making the process of tracking attendance, leaves which in turn reduces workload and thus increases efficiency.
+<!--
 <p>
 For more details-
-<a href="https://docs.google.com/document/d/13pVtgUSC7o03bKBDcg3bcGvAIQdTwMelTM2_UoI3obQ/edit?usp=sharing">
+<a href="">
 Document link 
 </a>
 </p>
+-->
 
 ------------------------------------------
 ## Features ##
 
-- User Sign In and Sign Up
-- Display tasks
-- Can add task,update task,delete task 
-- Sort the tasks according to it's category,task name,due date and priority
-- Can browse the task 
-- Get email,desktop notification
-- Overview of due dates in the form of calendar
-- Can Change theme
+<b>Employee</b> 
+- Sign In and Sign Up
+- Can apply for leave 
+- Get status of his leave applications
+- Browse  through holidays list 
+- Can mark his attendance
+- View his attendance history
+
+ <b>Admin</b> 
+- Sign In
+- Can add holidays for the office
+- View employees
+- Approve or Reject leave applications
+- Get employee details who applied for leave
+- Browse through employee details 
+- View attendance history of employees
 ------------------------------------------
-## Demo ##
-Sign In
 
-![Demo Sign In](gallery/TD_SignIn.gif)
-
-Task Diary
-
-![Demo Task Diary](gallery/Task_Diary.gif)
 ## How To Use
 #### Software Requirements
+VSCode or Android Studio
 
-PostgreSql<br>
-Python3
-
-#### Installation
+## Installation
 Install the dependencies by running:
- <!-- pip install -r requirements.txt -->
 ```html  
-    pip install tkcalender
-    pip install ttkthemes
-    pip install smtplib
+flutter pub get
 ```
+Install firebase in the node environment:
+```html  
+npm install -g firebase-tools
+```
+
+
+<p>
+For more details-
+<a href="https://firebase.google.com/docs/functions/get-started">
+ Firebase Cloud Functions  </a>
+</p>
+
+Flutter Documentation-
+<a href="https://flutter.dev/docs">
+ Flutter </a> 
+</p>
+
+Dart Programming-
+<a href="https://dart.dev/guides">
+ Dart </a> 
+</p>
 
 #### Run using Command Prompt
 
 ```html
-    python start.py
+    flutter run
 ```
-#### For getting email notification of task:
-
-Allow less secure app access by clicking on Turn On :
-https://myaccount.google.com/lesssecureapps 
-
-
 ---
 ###             Tech stack
-`Backend` : Python3  <br>
-`Database` : PostgreSQL <br>
-`Frontend` : Tkinter(module of python)  <br>
+`Database` : Firestore <br>
+`Frontend` : Flutter  <br>
 
 
 ------------------------------------------
 
-<h3 align="center"><b>Developed with :heart: by <a href="https://github.com/hiral72">Hiral</a> and <a href="https://github.com/Sakshi107">Sakshi</a></b></h1>
+<h3 align="center"><b>Developed  by <a href="https://github.com/hasti-15">Hasti Shah</a> , <a href="https://github.com/nishigthb">Nishi Shah</a> and <a href="https://github.com/hiral72">Hiral Sheth</a></b></h3>
+
