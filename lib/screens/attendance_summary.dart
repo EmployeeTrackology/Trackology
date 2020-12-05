@@ -3,6 +3,7 @@ import 'package:emp_tracker/screens/appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:emp_tracker/screens/admin_attend_history.dart';
 
+/*
 class Summary extends StatefulWidget {
   @override
   _SummaryState createState() => _SummaryState();
@@ -48,7 +49,7 @@ class _SummaryState extends State<Summary> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => Summary2()),
+                      MaterialPageRoute(builder: (context) => AttendanceSummary()),
                     );
                   },
                 ) //raised
@@ -56,14 +57,14 @@ class _SummaryState extends State<Summary> {
             )));
   }
 }
+*/
 
-
-class Summary2 extends StatefulWidget {
+class AttendanceSummary extends StatefulWidget {
   @override
-  _Summary2State createState() => _Summary2State();
+  _AttendanceSummaryState createState() => _AttendanceSummaryState();
 }
 
-class _Summary2State extends State<Summary2> {
+class _AttendanceSummaryState extends State<AttendanceSummary> {
   @override
   Widget build(BuildContext context) {
     Widget mycard(String event, String date1, String eid) {

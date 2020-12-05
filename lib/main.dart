@@ -14,12 +14,7 @@ import 'package:emp_tracker/screens/admin_holidays.dart';
 import 'package:emp_tracker/screens/view_holidays.dart';
 import 'package:emp_tracker/screens/attendance_summary.dart';
 import 'package:emp_tracker/screens/wrapper.dart';
-// import 'package:emp_tracker/screens/root_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-
-// import 'package:emp_tracker/locator.dart';
-// import 'package:emp_tracker/view_model/userCRUD.dart';
-// import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,7 +49,7 @@ class MyApp extends StatelessWidget {
         '/leave_app_form': (context) => LeaveForm(),
         '/admin_holidays': (context) => Holiday(),
         '/emp_holidays': (context) => ViewHoliday(),
-        '/attendance_summary':(context)=>Summary()
+        '/attendance_summary':(context)=>AttendanceSummary()
       },
       // home:AuthenticationWrapper(),
     );

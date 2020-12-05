@@ -1,12 +1,6 @@
-// import 'package:emp_tracker/models/leave.dart';
 import 'package:flutter/material.dart';
-// import 'dart:convert';
 import "package:emp_tracker/screens/appbar.dart";
-// import "package:emp_tracker/services/database.dart";
-// import "package:provider/provider.dart";
-// import 'package:emp_tracker/models/leave.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 
 class AdminLeaveRow extends StatefulWidget {
   final String name;

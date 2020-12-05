@@ -2,24 +2,18 @@
 import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:emp_tracker/view_model/userCRUD.dart';
-// import 'package:provider/provider.dart';
 import 'package:emp_tracker/models/user.dart';
 
 class ViewEmployees extends StatefulWidget {
   ViewEmployees({Key key}) : super(key: key);
-
   @override
   _ViewEmployeesState createState() => _ViewEmployeesState();
 }
-
 class _ViewEmployeesState extends State<ViewEmployees> {
-  // List<TheUser> users;
 
   @override
   Widget build(BuildContext context) {
     CollectionReference users = FirebaseFirestore.instance.collection('users');
-    // final userProvider = Provider.of<CRUDModel>(context);
     return Scaffold(
       backgroundColor: Color(0xffC7D3F4),
       appBar: new MyAppBar("View Employees"),
