@@ -11,7 +11,7 @@
     "name":"Attendance Summary",
     "desc":"Check attendance of employee" ,
     "img":"images/summary.png",
-    "path":"/admin"
+    "path":"/attendance_summary"
     },
     {
     "name":"Leave Applications",

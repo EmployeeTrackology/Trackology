@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:emp_tracker/screens/appbar.dart';
-// import 'package:emp_tracker/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:intl/intl.dart';
 
 class LeaveForm extends StatefulWidget {
   LeaveForm({Key key}) : super(key: key);
@@ -19,7 +18,9 @@ class _LeaveFormState extends State<LeaveForm> {
   DateTime fromDate = DateTime.now();
   DateTime toDate = DateTime.now();
   String leaveType;
-
+  final DateTime now = DateTime.now();
+  final DateFormat formatter = DateFormat('dd-MM-yyyy');
+  String desc;
   final from = TextEditingController(); //from
   final to = TextEditingController(); //to
   int differ = 0;
@@ -32,26 +33,51 @@ class _LeaveFormState extends State<LeaveForm> {
 
   @override
   Widget build(BuildContext context) {
+    Future<DocumentSnapshot> getData(String eid) async {
+      print("eid " + eid);
+      DocumentSnapshot result =
+          await FirebaseFirestore.instance.collection('users').doc(eid).get();
+      return result;
+    }
+
+    Future<String> userDetails(String eid) async {
+      final details = await getData(eid);
+      String name = details.data()['username'];
+      print(name);
+      return name;
+    }
+
     Future<void> createLeaveApp() async {
       User user = FirebaseAuth.instance.currentUser;
       Object obj = {
         'from': from.text,
         'to': to.text,
-        'appliedDate': DateTime.now().toString().substring(0, 10),
-        'type': type,
-        'leaveStatus': 'pending'
+        'appliedDate': formatter.format(DateTime.now()),
+        'type': type.substring(
+          8,
+        ),
+        'leaveStatus': 'pending',
+        'desc': desc
       };
 
       // Call the user's CollectionReference to add a new user
       await FirebaseFirestore.instance
           .collection("leaves")
-          .doc(user.uid).collection("Leaves_sub")
+          .doc(user.uid)
+          .collection("Leaves_sub")
           .add(obj)
           .then((value) => print("Leave form Added"))
           .catchError((error) => print("Failed to add leave: $error"));
-          
+
+      final username = await userDetails(user.uid);
+      print(username);
+      await FirebaseFirestore.instance
+          .collection("leaves")
+          .doc(user.uid)
+          .set({"username": username})
+          .then((value) => print("username form Added"))
+          .catchError((error) => print("Failed to add leave: $error"));
     }
-    
 
     return Scaffold(
         appBar: new MyAppBar("Leave Application Form"),
@@ -59,36 +85,19 @@ class _LeaveFormState extends State<LeaveForm> {
             child: Column(
           children: <Widget>[
             Center(
-                child: Container(
-              padding: EdgeInsets.fromLTRB(40, 10, 20, 5),
-              child: Text('Available Leaves',
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center),
-            ) //container
-                ), //center
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Container(
-                  margin: EdgeInsets.all(10.0),
-                  //   width:100,height:50,
-                  padding: EdgeInsets.fromLTRB(20, 10, 10, 5),
-                  color: Colors.blue[300],
-                  child: Text("ML - 2 ",
-                      style: TextStyle(fontSize: 25, color: Colors.white))),
-              SizedBox(height: 20, width: 10),
-              Container(
-                  padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  //padding:EdgeInsets.all(10.0),
-                  color: Colors.blue[300],
-                  child: Text("CL - 1 ",
-                      style: TextStyle(fontSize: 25, color: Colors.white))),
-              SizedBox(height: 20, width: 10),
-              Container(
-                  margin: EdgeInsets.all(10.0),
-                  padding: EdgeInsets.all(10.0),
-                  color: Colors.blue[300],
-                  child: Text("AL - 3 ",
-                      style: TextStyle(fontSize: 25, color: Colors.white)))
-            ]),
+              child: Container(
+                padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
+                child: TextField(
+                  onChanged: (val) {
+                    desc = val;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Leave description',
+                  ),
+                ),
+              ),
+            ),
             Column(
               children: <Widget>[
                 SizedBox(
@@ -107,7 +116,7 @@ class _LeaveFormState extends State<LeaveForm> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1900),
                             lastDate: DateTime(2100));
-                        from.text = date.toString().substring(0, 10);
+                        from.text = formatter.format(date);
                         fromDate = date;
                         setState(() {
                           differ = toDate.difference(fromDate).inDays;
@@ -134,7 +143,7 @@ class _LeaveFormState extends State<LeaveForm> {
                             initialDate: DateTime.now(),
                             firstDate: DateTime(1900),
                             lastDate: DateTime(2100));
-                        to.text = date.toString().substring(0, 10);
+                        to.text = formatter.format(date);
                         toDate = date;
                         setState(() {
                           differ = toDate.difference(fromDate).inDays;

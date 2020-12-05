@@ -1,12 +1,6 @@
-// import 'package:emp_tracker/models/leave.dart';
 import 'package:flutter/material.dart';
-// import 'dart:convert';
 import "package:emp_tracker/screens/appbar.dart";
-// import "package:emp_tracker/services/database.dart";
-// import "package:provider/provider.dart";
-// import 'package:emp_tracker/models/leave.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
 
 class AdminLeaveRow extends StatefulWidget {
   final String name;
@@ -84,6 +78,7 @@ class _AdminLeaveRowState extends State<AdminLeaveRow> {
         Container(
             height: 50,
             width: 90,
+            // color:Colors.white,
             child: RaisedButton(
               textColor: Colors.red,
               child: Text(
@@ -121,23 +116,26 @@ class LeavesApp extends StatefulWidget {
 }
 
 class _LeaveState extends State<LeavesApp> {
-  static List leaveApps2 = [];
-  static List leaveAppsId = [];
-  static List empId = [];
-  static List eName = [];
+
   @override
   Widget build(BuildContext context) {
-    Future<List<Widget>> getLeaves() async {
-      leaveApps2 = [];
-      leaveAppsId = [];
-      empId = [];
-      eName = [];
-      List x = await FirebaseFirestore.instance
-          .collection("leaves")
-          .get()
-          .then((val) => val.docs);
+    Future<DocumentSnapshot> getData(String eid) async {
+      // print("eid " + eid);
+      DocumentSnapshot result =
+          await FirebaseFirestore.instance.collection('users').doc(eid).get();
+      return result;
+    }
 
-      for (int i = 0; i < x.length; i++) {
+    Future<String> userDetails(String eid) async {
+      final details = await getData(eid);
+      String name = details.data()['username'];
+      // print(name);
+      return name;
+    }
+    Future<List<Widget>> getRows(List x) async {
+      List<Widget> items = new List<Widget>();
+ 
+      for (int i = 0; i < x.length; i++){
         print(x[i].id);
         await FirebaseFirestore.instance
             .collection("leaves")
@@ -146,33 +144,37 @@ class _LeaveState extends State<LeavesApp> {
             .get()
             .then((value) {
           value.docs.forEach((ele) {
-            leaveApps2.add(ele.data());
-            leaveAppsId.add(ele.id);
-            empId.add(x[i].id);
-            eName.add(x[i].data()['username']);
-            print(x[i].data()['username']);
+            userDetails(x[i].id).then((na) {
+              print(ele.data()['leaveStatus']);
+              if (ele.data()['leaveStatus'] == "pending") {
+                print("im here");
+                items.add(AdminLeaveRow(
+                    na,
+                    ele.data()['type'],
+                    ele.data()['from'],
+                    ele.data()['to'],
+                    ele.data()['appliedDate'],
+                    ele.id,
+                    x[i].id));
+              }
+            });
           });
         });
       }
-
-      print(leaveApps2.length);
-      List<Widget> items = new List<Widget>();
-      int k = 0;
-      leaveApps2.forEach((element) {
-        // print(element);
-        // print(leaveAppsId[k]);
-        if (element['leaveStatus'] == "pending") {
-          items.add(AdminLeaveRow(eName[k], element['type'], element['from'],
-              element['to'], element['appliedDate'], leaveAppsId[k], empId[k]));
-        }
-
-        k++;
-      });
       return (items);
     }
 
-    // CollectionReference leaves =
-    //     FirebaseFirestore.instance.collection('leaves');
+    Future<List<Widget>> getLeaves() async {
+
+      List x = await FirebaseFirestore.instance
+          .collection("leaves")
+          .get()
+          .then((val) => val.docs);
+      return getRows(x);
+
+    }
+
+    
     return Scaffold(
       appBar: new MyAppBar("Leave applications"),
       body: Container(

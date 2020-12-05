@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LeaveRow extends StatelessWidget {
-  final String type, from, to, status, appliedOn;
+  final String type, from, to, status, appliedOn,desc;
 
   String _setImage(status) {
     String statusCheck = status;
@@ -18,7 +18,7 @@ class LeaveRow extends StatelessWidget {
     }
   }
 
-  LeaveRow(this.type, this.from, this.to, this.status, this.appliedOn);
+  LeaveRow(this.type, this.from, this.to, this.status, this.appliedOn,this.desc);
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -32,7 +32,6 @@ class LeaveRow extends StatelessWidget {
         Expanded(
           flex: 5,
           child: Container(
-            height: 100,
             width: 250,
             child: Padding(
               padding: EdgeInsets.only(left: 20),
@@ -42,11 +41,16 @@ class LeaveRow extends StatelessWidget {
                   children: <Widget>[
                     Text(type,
                         style: TextStyle(fontSize: 18, fontFamily: "Sansita")),
+                    SizedBox(height:4),
+                    Text("Description:" +desc,style:TextStyle(fontSize: 15)),
+                    SizedBox(height:4),
                     Text(from + " to " + to),
+                    SizedBox(height:4),
                     Text(status,
                         style: TextStyle(
                             decoration: TextDecoration.underline,
                             decorationThickness: 1.5)),
+                    SizedBox(height:4),
                     Text("Applied on: " + appliedOn)
                   ]),
             ),
@@ -99,7 +103,7 @@ class _LeaveState extends State<MyLeaves> {
                         document.data()['from'],
                         document.data()['to'],
                         document.data()['leaveStatus'],
-                        document.data()['appliedDate']);
+                        document.data()['appliedDate'],document.data()['desc']);
                   }).toList(),
                 ),
               );

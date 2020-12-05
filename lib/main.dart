@@ -12,6 +12,7 @@ import 'package:emp_tracker/screens/attend_history.dart';
 import 'package:emp_tracker/screens/leave_app_form.dart';
 import 'package:emp_tracker/screens/admin_holidays.dart';
 import 'package:emp_tracker/screens/view_holidays.dart';
+import 'package:emp_tracker/screens/attendance_summary.dart';
 import 'package:emp_tracker/screens/wrapper.dart';
 // import 'package:emp_tracker/screens/root_page.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,7 +53,8 @@ class MyApp extends StatelessWidget {
         '/attendace_history': (context) => Check(),
         '/leave_app_form': (context) => LeaveForm(),
         '/admin_holidays': (context) => Holiday(),
-        '/emp_holidays': (context) => ViewHoliday()
+        '/emp_holidays': (context) => ViewHoliday(),
+        '/attendance_summary':(context)=>Summary()
       },
       // home:AuthenticationWrapper(),
     );
