@@ -151,7 +151,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         child: TextFormField(
                           keyboardType: TextInputType.emailAddress,
                           validator: validateEmail,
-                          onSaved: (value) {
+                          onChanged: (value) {
                             email = value;
                           },
                           style: TextStyle(
@@ -388,14 +388,25 @@ class _SignUpPageState extends State<SignUpPage> {
                             }
                           },
                           child: Center(
+                              child: RaisedButton(
+                            textColor: Colors.white,
+                            color: Color(0xff603F83),
                             child: Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 15),
+                            ),
+                            onPressed: createUser,
+                          )),
+                          /*child: Text(
                               "Sign Up",
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600,
                                   fontSize: 15),
-                            ),
-                          ),
+                                   //onTap: createUser,
+                                   onTap:() {},
+                            ),*/
                         ),
                       ),
                       SizedBox(
