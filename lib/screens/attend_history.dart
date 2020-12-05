@@ -1,7 +1,6 @@
-// import 'dart:convert';
 import 'package:flutter/material.dart';
 import "package:emp_tracker/screens/appbar.dart";
-import 'dart:async';
+// import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -57,19 +56,19 @@ class Check extends StatefulWidget {
 }
 
 class _CheckState extends State<Check> {
-  DateTime selectedDate = DateTime.now();
-  Future<Null> _selectDate(BuildContext context) async {
-    final DateTime picked = await showDatePicker(
-        context: context,
-        initialDate: selectedDate,
-        firstDate: DateTime(2015, 8),
-        lastDate: DateTime(2101));
+  // DateTime selectedDate = DateTime.now();
+  // Future<Null> _selectDate(BuildContext context) async {
+  //   final DateTime picked = await showDatePicker(
+  //       context: context,
+  //       initialDate: selectedDate,
+  //       firstDate: DateTime(2015, 8),
+  //       lastDate: DateTime(2101));
 
-    if (picked != null && picked != selectedDate)
-      setState(() {
-        selectedDate = picked;
-      });
-  }
+  //   if (picked != null && picked != selectedDate)
+  //     setState(() {
+  //       selectedDate = picked;
+  //     });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +83,7 @@ class _CheckState extends State<Check> {
     return Scaffold(
         appBar: new MyAppBar("Attendance History"),
         body: ListView(children: [
-          Row(
+         /* Row(
             children: [
               Expanded(
                 child: Container(
@@ -206,6 +205,7 @@ class _CheckState extends State<Check> {
               ),
             ],
           ),
+          */
           // SizedBox(height: 10,),
           Container(
             child: StreamBuilder<QuerySnapshot>(

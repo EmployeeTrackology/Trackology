@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:emp_tracker/screens/appbar.dart';
-import 'package:intl/intl.dart'; //This package provides date formatting and parsing facilities. This library also defines the DateFormat, NumberFormat, and BidiFormatter classes.
+import 'package:intl/intl.dart'; 
 
 class MarkAttendance extends StatefulWidget {
   @override
@@ -21,7 +21,6 @@ class _MarkState extends State<MarkAttendance> {
     
     Future<void> createAttendance() async {
       User user = FirebaseAuth.instance.currentUser;
-      //TimeOfDay now = TimeOfDay.now();
       var now = new DateTime.now();
       Object obj = {
         'Date': DateTime.now().toString().substring(0, 10),
