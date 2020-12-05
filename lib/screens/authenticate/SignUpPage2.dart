@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 Container(
                   padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
                   child: TextField(
-                    
+                  
                     onChanged: (val) {
                       
                       password = val;
@@ -154,11 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 20),
                 Container(
                     height: 50,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xff603FF3), Color(0xff603F83)],
-                        stops: [0, 1],
-                      ),
+                    decoration: BoxDecoration(  
                       borderRadius: BorderRadius.all(Radius.circular(15)),
                     ),
                     padding: EdgeInsets.all(5),
@@ -196,4 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => LoginPage()));
   }
+
+    
+
 }
