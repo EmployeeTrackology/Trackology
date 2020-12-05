@@ -154,11 +154,8 @@ class _State extends State<AddEmployee> {
                 Container(
                     height: 50,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [Color(0xff603FF3), Color(0xff603F83)],
-                        stops: [0, 1],
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                
                     ),
                     padding: EdgeInsets.all(5),
                     child: RaisedButton(
