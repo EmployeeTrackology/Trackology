@@ -79,7 +79,7 @@ class _AttendanceSummaryState extends State<AttendanceSummary> {
               child: Container(
                 padding: EdgeInsets.all(5.0),
                 child: ListTile(
-                  title: Text("$event\t\t $date1",
+                  title: Text("$event\t-\t $date1",
                       style: TextStyle(fontWeight: FontWeight.bold)), //text
                 ), //listtile
               ),
